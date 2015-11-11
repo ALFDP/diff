@@ -20,7 +20,7 @@
     void logQuit();
 
     LoggerConfig getLoggerConfig();
-    LoggerConfig setLoggerConfig(LoggerConfig *old);
+    LoggerConfig setLoggerConfig(LoggerConfig *newConf);
     LoggerConfig buildLoggerConfig(FILE *configFile);
 
     unsigned int inArray(const char *str, const char **array, unsigned int arraySize);

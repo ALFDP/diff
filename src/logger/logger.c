@@ -2,6 +2,14 @@
 
 /**
 
+Defines the functions that will produce the application's logs.
+
+@author Aurélien DUVAL
+
+**/
+
+/**
+
 Initializes the logger process
 
 @return Error code of the initialization
@@ -31,10 +39,20 @@ unsigned char logInit()
     return 0x00;
 }
 
+/**
+
+    Writes a log in the specified log file if its level is greater or equal than the specified level
+
+    @param log The log string to add to the log file
+    @param level The level of the log you want to write
+
+    @return An error code which says if the log was written or not
+
+**/
 unsigned char logWrite(const char *log, unsigned char level)
 {
     LoggerConfig config = getLoggerConfig();
-    if(level > config.level)
+    if(level >= config.level)
     {
         fprintf(config.file, log);
         return 0;
@@ -43,6 +61,11 @@ unsigned char logWrite(const char *log, unsigned char level)
     return 1;
 }
 
+/**
+
+    Quits the logger process. At exit callback.
+
+**/
 void logQuit()
 {
     LoggerConfig config = getLoggerConfig();
@@ -53,23 +76,45 @@ void logQuit()
     }
 }
 
+/**
+
+    Returns the logger configuration
+
+    @return The logger configuration
+**/
 LoggerConfig getLoggerConfig()
 {
     return getLoggerConfig(NULL);
 }
 
-LoggerConfig setLoggerConfig(LoggerConfig *old)
+/**
+
+    Returns the new logger configuration. Modifies the old one if the parameter is not NULL.
+
+    @param newConf The new configuration value.
+
+    @return The new logger configuration
+
+**/
+LoggerConfig setLoggerConfig(LoggerConfig *newConf)
 {
     static LoggerConfig config;
 
-    if(old != NULL)
+    if(newConf != NULL)
     {
-        config = *old;
+        config = *newConf;
     }
 
     return config;
 }
 
+/**
+
+    Builds the logger configuration by parsing the default configuration file.
+
+    @return The parsed logger configuration.
+
+**/
 LoggerConfig buildLoggerConfig(FILE *configFile)
 {
     char buff[CONFIG_BUFF_SIZE] = "";
@@ -95,6 +140,17 @@ LoggerConfig buildLoggerConfig(FILE *configFile)
     return config;
 }
 
+/**
+
+    Checks if a given string is contained in a given array.
+
+    @param str The string to search
+    @param array The string array which compose the test
+    @param arraySize The size of the given array
+
+    @return The first index of the matching result
+
+**/
 unsigned int inArray(const char *str, const char **array, unsigned int arraySize)
 {
     register unsigned int i;
@@ -110,6 +166,15 @@ unsigned int inArray(const char *str, const char **array, unsigned int arraySize
     return i;
 }
 
+/**
+
+    Parses the correct loggers'configuration parameter to the correct element
+
+    @param config The configuration structure to parse
+    @param value The value to parse in the structure
+    @param index The index which refers to the destination of the value.
+
+**/
 void LoggerConfigRoutingProc(LoggerConfig *config, const char *value, unsigned int index)
 {
     switch(index)
