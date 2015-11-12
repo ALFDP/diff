@@ -54,7 +54,7 @@ int getLineNumber(FILE* file)
 char* cpyLineToBuff(FILE* file)
 {
 	char *buffer = NULL;
-	int lenght = 0, c = 0;
+	int length = 0, c = 0;
 	
 	c = fgetc(file);
 	buffer = malloc(sizeof(char));
@@ -63,15 +63,15 @@ char* cpyLineToBuff(FILE* file)
 	while (1)
 	{
 		c = fgetc(file);
-		lenght++;
+		length++;
 		if (c == '\n' || c== '\0' || c == EOF)
 		{
-			buffer = realloc(buffer, (lenght + 1) * sizeof(char));
-			buffer[lenght] = '\0';
+			buffer = realloc(buffer, (length + 1) * sizeof(char));
+			buffer[length] = '\0';
 			break;
 		}
-		buffer = realloc(buffer, (lenght + 1) * sizeof(char));
-		buffer[lenght] = c;	
+		buffer = realloc(buffer, (length + 1) * sizeof(char));
+		buffer[length] = c;
 	}
 	
 	return buffer;
