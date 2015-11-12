@@ -13,25 +13,26 @@ FileContent* getFileElem (char *filePath) {
 		
 		if (file != NULL)
 		{
-			char* buffer = NULL;
-			struct FileContent elem;
+			
+			FileContent* elem;
+			elem = malloc(sizeof(FileContent));
 			int nbLine = getLineNumber(file), i = 0;
 
-			elem.elem = malloc(nbLine * sizeof(char*));
+			elem->elem = malloc(nbLine * sizeof(char*));
 			for (i = 0; i < nbLine; i++)
 			{
-				elem.elem[i] = cpyLineToBuff(file);
+				elem->elem[i] = cpyLineToBuff(file);
 			}
 
-			elem.nbLine = nbLine;
+			elem->nbLine = nbLine;
 			fclose(file);
-			return &elem;
+			return elem;
 		}
 		printf("ERROR: Cannot open file! \n");
-		return 1;
+		EXIT_FAILURE;
 	}
 	printf("ERROR: filepath is empty\n");
-	return 1;
+	EXIT_FAILURE;
 }
 
 int getLineNumber(FILE* file)
@@ -77,9 +78,9 @@ void freeStruct(FileContent* structToFree)
 	if (structToFree == NULL)
 	{
 		printf("ERROR: The structure is empty, nothing to free\n");
-		return 1;
+		EXIT_FAILURE;
 	}
-	int i = 0;
+	unsigned int i = 0;
 
 	for (i = 0; i < structToFree->nbLine; i++)
 	{
@@ -88,5 +89,5 @@ void freeStruct(FileContent* structToFree)
 	free(structToFree->elem);
 	free(structToFree);
 
-	return 0;
+	EXIT_SUCCESS;
 }
