@@ -4,35 +4,32 @@
 
 #include "splitFileContents.h"
 
-FileContent* getFileElem (char *filePath) {
-	if (filePath != NULL)
-	{
-		FILE* file = NULL;
-
-		file = fopen(filePath, "r");
-		
-		if (file != NULL)
-		{
-			
-			FileContent* elem;
-			elem = malloc(sizeof(FileContent));
-			int nbLine = getLineNumber(file), i = 0;
-
-			elem->elem = malloc(nbLine * sizeof(char*));
-			for (i = 0; i < nbLine; i++)
-			{
-				elem->elem[i] = cpyLineToBuff(file);
-			}
-
-			elem->nbLine = nbLine;
-			fclose(file);
-			return elem;
-		}
-		printf("ERROR: Cannot open file! \n");
+FileContent* getFileElem(char *filePath) {
+	if (filePath == NULL)
 		exit(EXIT_FAILURE);
+
+	FILE* file = NULL;
+
+	file = fopen(filePath, "r");
+
+	if (file == NULL)
+		exit(EXIT_FAILURE);
+
+	FileContent* elem;
+	elem = malloc(sizeof(FileContent));
+	int nbLine = 0, i = 0;
+	nbLine = getLineNumber(file);
+
+	elem->elem = malloc(nbLine * sizeof(char*));
+	for (i = 0; i < nbLine; i++)
+	{
+		elem->elem[i] = cpyLineToBuff(file);
 	}
-	printf("ERROR: filepath is empty\n");
-	exit(EXIT_FAILURE);
+
+	elem->nbLine = nbLine;
+	fclose(file);
+
+	return elem;
 }
 
 int getLineNumber(FILE* file)
@@ -41,9 +38,13 @@ int getLineNumber(FILE* file)
 
 	// Obtain number of line
 	fseek(file, 0, SEEK_END);
+	rewind(file);
 	while ((c = fgetc(file)) != EOF)
+	{
 		if (c == '\n')
 			count++;
+	}
+
 	rewind(file);
 	return count;
 }
@@ -58,17 +59,12 @@ char* cpyLineToBuff(FILE* file)
 	buffer[0] = c;
 	lenght++;
 
-	while (c != '\n')
+	while (c != '\n' && c != EOF)
 	{
-		char* tmp = malloc((lenght + 1) * sizeof(char));
-		for (i = 0; i < lenght; i++)
-			tmp[i] = buffer[i];
 		c = fgetc(file);
-		tmp[lenght] = c;
 		lenght++;
-		free(buffer);
-		buffer = tmp;
-		free(tmp);
+		buffer = realloc(buffer, lenght * sizeof(char));
+		buffer[lenght - 1] = c;
 	}
 	return buffer;
 }
