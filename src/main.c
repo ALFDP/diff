@@ -18,7 +18,9 @@ int main(int argc, char** argv)
 	FileContent* file1;
 	printf("File 1 path: %s\n", argv[1]);
 	file1 = getFileElem(argv[1]);
-	printf("Struct number of line: %d", file1->nbLine);
+	printf("Struct number of line: %d\n", file1->nbLine);
+
+	
 
 	for (i = 0; i < file1->nbLine; i++)
 	{

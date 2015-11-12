@@ -57,14 +57,19 @@ char* cpyLineToBuff(FILE* file)
 
 	buffer = malloc(sizeof(char));
 	buffer[0] = c;
-	lenght++;
 
-	while (c != '\n' && c != EOF)
+	while (c != EOF)
 	{
 		c = fgetc(file);
 		lenght++;
-		buffer = realloc(buffer, lenght * sizeof(char));
-		buffer[lenght - 1] = c;
+		if (c == '\n')
+		{
+			buffer = realloc(buffer, (lenght + 1) * sizeof(char));
+			buffer[lenght] = '\0';
+			break;
+		}
+		buffer = realloc(buffer, (lenght + 1) * sizeof(char));
+		buffer[lenght] = c;	
 	}
 	return buffer;
 }
@@ -82,8 +87,8 @@ void freeStruct(FileContent* structToFree)
 	{
 		free(structToFree->elem[i]);
 	}
+
 	free(structToFree->elem);
 	free(structToFree);
-
 
 }
