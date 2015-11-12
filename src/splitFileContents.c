@@ -37,6 +37,7 @@ int getLineNumber(FILE* file)
 	int c = 0, count = 0;
 
 	// Obtain number of line
+	
 	fseek(file, 0, SEEK_END);
 	rewind(file);
 	while ((c = fgetc(file)) != EOF)
@@ -44,6 +45,7 @@ int getLineNumber(FILE* file)
 		if (c == '\n')
 			count++;
 	}
+	count++;
 
 	rewind(file);
 	return count;
@@ -51,18 +53,18 @@ int getLineNumber(FILE* file)
 
 char* cpyLineToBuff(FILE* file)
 {
-	int i = 0, lenght = 0;
-	char* buffer = NULL;
-	int c = fgetc(file);
-
+	char *buffer = NULL;
+	int lenght = 0, c = 0;
+	
+	c = fgetc(file);
 	buffer = malloc(sizeof(char));
 	buffer[0] = c;
 
-	while (c != EOF)
+	while (1)
 	{
 		c = fgetc(file);
 		lenght++;
-		if (c == '\n')
+		if (c == '\n' || c== '\0' || c == EOF)
 		{
 			buffer = realloc(buffer, (lenght + 1) * sizeof(char));
 			buffer[lenght] = '\0';
@@ -71,6 +73,7 @@ char* cpyLineToBuff(FILE* file)
 		buffer = realloc(buffer, (lenght + 1) * sizeof(char));
 		buffer[lenght] = c;	
 	}
+	
 	return buffer;
 }
 
@@ -78,17 +81,41 @@ void freeStruct(FileContent* structToFree)
 {
 	if (structToFree == NULL)
 	{
-		printf("ERROR: The structure is empty, nothing to free\n");
-		exit(EXIT_FAILURE);
+		printf("WARNING: The structure is empty, nothing to free\n");
 	}
-	unsigned int i = 0;
-
-	for (i = 0; i < structToFree->nbLine; i++)
+	else
 	{
-		free(structToFree->elem[i]);
+		unsigned int i = 0;
+
+		for (i = 0; i < structToFree->nbLine; i++)
+		{
+			free(structToFree->elem[i]);
+		}
+
+		free(structToFree->elem);
+		free(structToFree);
 	}
 
-	free(structToFree->elem);
-	free(structToFree);
+}
 
+void structDisplay(FileContent* structToDisplay, int displayLine)
+{
+	if (structToDisplay == NULL)
+	{
+		printf("WARNING: Structure is empty, nothing to display\n");
+	}
+	else
+	{
+		unsigned int i = 0;
+		if (displayLine == TRUE)
+		{
+			for (i = 0; i < structToDisplay->nbLine; i++)
+				printf("%d %s\n", i+1, structToDisplay->elem[i]);
+		}
+		else
+		{
+			for (i = 0; i < structToDisplay->nbLine; i++)
+				printf("%s\n", structToDisplay->elem[i]);
+		}
+	}
 }
