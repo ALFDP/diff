@@ -85,5 +85,5 @@ void freeStruct(FileContent* structToFree)
 	free(structToFree->elem);
 	free(structToFree);
 
-	exit(EXIT_SUCCESS);
+
 }
