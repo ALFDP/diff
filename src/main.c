@@ -32,8 +32,6 @@ int main(int argc, char** argv)
 	freeStruct(file1);
 	freeStruct(file2);
 
-	system("PAUSE");
-
 	return 0;
 
 }
