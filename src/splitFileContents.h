@@ -1,5 +1,10 @@
 #pragma once
 
+// Define to simulate bool 
+#define TRUE 1
+#define FALSE 0
+
+
 // Definition of the fileContent Structure
 
 typedef struct FileContent FileContent;
@@ -15,3 +20,4 @@ FileContent* getFileElem(char *filePath);
 int getLineNumber(FILE* file);
 char* cpyLineToBuff(FILE* file);
 void freeStruct(FileContent* structToFree);
+void structDisplay(FileContent* structToDisplay, int displayLine);
