@@ -29,10 +29,10 @@ FileContent* getFileElem (char *filePath) {
 			return elem;
 		}
 		printf("ERROR: Cannot open file! \n");
-		EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
 	printf("ERROR: filepath is empty\n");
-	EXIT_FAILURE;
+	exit(EXIT_FAILURE);
 }
 
 int getLineNumber(FILE* file)
@@ -78,7 +78,7 @@ void freeStruct(FileContent* structToFree)
 	if (structToFree == NULL)
 	{
 		printf("ERROR: The structure is empty, nothing to free\n");
-		EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
 	unsigned int i = 0;
 
@@ -89,5 +89,5 @@ void freeStruct(FileContent* structToFree)
 	free(structToFree->elem);
 	free(structToFree);
 
-	EXIT_SUCCESS;
+	exit(EXIT_SUCCESS);
 }
