@@ -4,14 +4,20 @@
 
 #include "splitFileContents.h"
 
+
+// This function is the main function to set up the structure from file
+// The parameter is the path of the file 
+// The function a pointer to the new structure
 FileContent* pushFileToStruct(char *filePath) {
+	// Checking if the file path is empty, if null the program will be close by exit function
 	if (filePath == NULL)
 		exit(EXIT_FAILURE);
 
 	FILE* file = NULL;
 
 	file = fopen(filePath, "r");
-
+	
+	// Checking if the file is open, if the opening has failed we close the program 
 	if (file == NULL)
 		exit(EXIT_FAILURE);
 
@@ -19,12 +25,16 @@ FileContent* pushFileToStruct(char *filePath) {
 	int nbLine = 0, i = 0;
 
 	elem = malloc(sizeof(FileContent));
+
+	// Geting line number from the file
 	nbLine = getLineNumber(file);
 
+	// Here, all the line of the file are put in char tab, one char tab for one line
+	// The char** of the struct point to all the char tab (i.e the line)
 	elem->elem = malloc(nbLine * sizeof(char*));
 	for (i = 0; i < nbLine; i++)
 	{
-		elem->elem[i] = cpyLineToBuff(file);
+		elem->elem[i] = getLine(file);
 	}
 
 	elem->nbLine = nbLine;
@@ -33,6 +43,7 @@ FileContent* pushFileToStruct(char *filePath) {
 	return elem;
 }
 
+// This function get the number of line in the file in parameter
 int getLineNumber(FILE* file)
 {
 	int c = 0, count = 0;
@@ -46,12 +57,15 @@ int getLineNumber(FILE* file)
 	}
 
 	count++;
+
+	// rewind put the cursor to the first char in the file
 	rewind(file);
 
 	return count;
 }
 
-char* cpyLineToBuff(FILE* file)
+// This function get line in the file and return it as char* 
+char* getLine(FILE* file)
 {
 	char *line = NULL;
 	char buffer[BUFSIZ];
@@ -60,8 +74,12 @@ char* cpyLineToBuff(FILE* file)
 	initBuffer(&buffer[0], BUFSIZ);	
 	c = fgetc(file);
 
+	// This while get char by char in the file and put them in buffer var
+	// If the buffer is full, we flush it in the line char* 
+	// This method limite malloc use
 	while (1)
 	{
+		// If the cursor reach the end of the line or the fil, we break the while
 		if (c == '\n' || c== '\0' || c == EOF)
 			break;
 		
@@ -75,11 +93,13 @@ char* cpyLineToBuff(FILE* file)
 
 		c = fgetc(file);
 	}
+	// Don't forget to flush the buffer in the line char if is not full in the while
 	realloc_s(&line, buffer, i);
 
 	return line;
 }
 
+// As we set our struct with ptr we need to free them when we don't use them
 void freeStruct(FileContent* structToFree)
 {
 	if (structToFree == NULL)
@@ -101,6 +121,8 @@ void freeStruct(FileContent* structToFree)
 
 }
 
+// This function display all the line in the struct
+// The second paramter is a bool to display or not the line number 
 void structDisplay(FileContent* structToDisplay, int displayLine)
 {
 	if (structToDisplay == NULL)
@@ -123,11 +145,14 @@ void structDisplay(FileContent* structToDisplay, int displayLine)
 	}
 }
 
+// This is a custom realloc functon to set up our line 
+// First paramter is the string to change size, second the string to cpy in the first, and the third the number of elements to cpy
 int realloc_s(char** line, char* toCpy, int nbELem)
 {
 	char* temp = NULL;
 	int i = 0, length = 0;
 
+	// We check if it's the first allocation or not
 	if (line[0] != NULL)
 	{
 		length = strlen(line[0]);
@@ -139,11 +164,13 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 			return 1;
 		}
 
+		// First we cpy our string in temp string
 		for (i = 0; i < length; i++)
 		{
 			temp[i] = line[0][i];
 		}
 
+		// Then we free the string to realloc the string in the new size
 		free(line);
 		line[0] = malloc((length + nbELem + 1) * sizeof(char));
 
@@ -153,19 +180,24 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 			free(temp);
 			return 1;
 		}
+		// We reput our first content in his place 
 		for (i = 0; i < length; i++)
 		{
 			line[0][i] = temp[i];
 		}
 
+		// We free the temp string we won't use it anymore
 		free(temp);
 
+		// We concat the new content after the old one in our string 
 		for (i = 0; i < nbELem; i++)
 		{
 			line[0][length + i] = toCpy[i];
 		}
 		line[0][length + nbELem] = '\0';
 	}
+	// Here is almost the same step but for an empty string
+	// We put only the new content
 	else
 	{
 		line[0] = malloc((nbELem + 1) * sizeof(char));
@@ -180,6 +212,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 	return 0;
 }
 
+// This function initalize string (char tab) to 0
 void initBuffer(char *buffer, int size)
 {
 	while (size > 0)
