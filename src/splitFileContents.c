@@ -53,28 +53,29 @@ int getLineNumber(FILE* file)
 
 char* cpyLineToBuff(FILE* file)
 {
-	char *buffer = NULL;
-	int lenght = 0, c = 0;
-	
+	char *line = NULL;
+	char buffer[BUFSIZ];
+	int i = 0, c = 0;
+
+	initBuffer(&buffer[0], BUFSIZ);
 	c = fgetc(file);
-	buffer = malloc(sizeof(char));
-	buffer[0] = c;
 
 	while (1)
 	{
-		c = fgetc(file);
-		lenght++;
-		if (c == '\n' || c== '\0' || c == EOF)
-		{
-			buffer = realloc(buffer, (lenght + 1) * sizeof(char));
-			buffer[lenght] = '\0';
+		if (c == 10 || c == '\0' || c == EOF)
 			break;
+		buffer[i] = c;
+		i++;
+		if (i == BUFSIZ)
+		{
+			realloc_s(&line, buffer, i);
+			i = 0;
 		}
-		buffer = realloc(buffer, (lenght + 1) * sizeof(char));
-		buffer[lenght] = c;	
+		c = fgetc(file);
 	}
-	
-	return buffer;
+	realloc_s(&line, buffer, i);
+
+	return line;
 }
 
 void freeStruct(FileContent* structToFree)
@@ -117,5 +118,71 @@ void structDisplay(FileContent* structToDisplay, int displayLine)
 			for (i = 0; i < structToDisplay->nbLine; i++)
 				printf("%s\n", structToDisplay->elem[i]);
 		}
+	}
+}
+
+int realloc_s(char** line, char* toCpy, int nbELem)
+{
+	char* temp = NULL;
+	int i = 0, length = 0;
+
+	if (line[0] != NULL)
+	{
+		length = strlen(line[0]);
+		temp = malloc(length * sizeof(char));
+
+		if (temp == NULL)
+		{
+			printf("ERROR: Failed Memory Allocation\n");
+			return 1;
+		}
+
+		for (i = 0; i < length; i++)
+		{
+			temp[i] = line[0][i];
+		}
+
+		free(line);
+		line[0] = malloc((length + nbELem + 1) * sizeof(char));
+
+		if (line == NULL)
+		{
+			printf("ERROR: Failed Memory Allocation");
+			free(temp);
+			return 1;
+		}
+		for (i = 0; i < length; i++)
+		{
+			line[0][i] = temp[i];
+		}
+
+		free(temp);
+
+		for (i = 0; i < nbELem; i++)
+		{
+			line[0][length + i] = toCpy[i];
+		}
+		line[0][length + nbELem] = '\0';
+	}
+	else
+	{
+		line[0] = malloc((nbELem + 1) * sizeof(char));
+
+		for (i = 0; i < nbELem; i++)
+		{
+			line[0][i] = toCpy[i];
+		}
+		line[0][nbELem] = '\0';
+	}
+	
+	return 0;
+}
+
+void initBuffer(char *buffer, int size)
+{
+	while (size > 0)
+	{
+		buffer[size - 1] = 0;
+		size--;
 	}
 }
