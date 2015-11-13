@@ -21,3 +21,5 @@ int getLineNumber(FILE* file);
 char* cpyLineToBuff(FILE* file);
 void freeStruct(FileContent* structToFree);
 void structDisplay(FileContent* structToDisplay, int displayLine);
+int realloc_s(char **line, char* toCpy, int nbELem);
+void initBuffer(char *buffer, int size);
