@@ -4,7 +4,7 @@
 
 #include "splitFileContents.h"
 
-FileContent* getFileElem(char *filePath) {
+FileContent* pushFileToStruct(char *filePath) {
 	if (filePath == NULL)
 		exit(EXIT_FAILURE);
 
@@ -15,9 +15,10 @@ FileContent* getFileElem(char *filePath) {
 	if (file == NULL)
 		exit(EXIT_FAILURE);
 
-	FileContent* elem;
-	elem = malloc(sizeof(FileContent));
+	FileContent* elem = NULL;
 	int nbLine = 0, i = 0;
+
+	elem = malloc(sizeof(FileContent));
 	nbLine = getLineNumber(file);
 
 	elem->elem = malloc(nbLine * sizeof(char*));
@@ -38,16 +39,15 @@ int getLineNumber(FILE* file)
 
 	// Obtain number of line
 	
-	fseek(file, 0, SEEK_END);
-	rewind(file);
 	while ((c = fgetc(file)) != EOF)
 	{
 		if (c == '\n')
 			count++;
 	}
-	count++;
 
+	count++;
 	rewind(file);
+
 	return count;
 }
 

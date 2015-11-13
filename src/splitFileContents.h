@@ -16,7 +16,7 @@ struct FileContent
 
 // Function's prototype
 
-FileContent* getFileElem(char *filePath);
+FileContent* pushFileToStruct(char *filePath);
 int getLineNumber(FILE* file);
 char* cpyLineToBuff(FILE* file);
 void freeStruct(FileContent* structToFree);
