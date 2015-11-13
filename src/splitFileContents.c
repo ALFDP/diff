@@ -53,16 +53,31 @@ int getLineNumber(FILE* file)
 
 char* cpyLineToBuff(FILE* file)
 {
+<<<<<<< HEAD
 	char *line = NULL;
 	char buffer[BUFSIZ];
 	int i = 0, c = 0;
 
 	initBuffer(&buffer[0], BUFSIZ);
+=======
+	char *buffer = NULL;
+	int length = 0, c = 0;
+	
+>>>>>>> 456336d0a1b275590bb88a57257f7c00e1024f4a
 	c = fgetc(file);
 
 	while (1)
 	{
+<<<<<<< HEAD
 		if (c == 10 || c == '\0' || c == EOF)
+=======
+		c = fgetc(file);
+		length++;
+		if (c == '\n' || c== '\0' || c == EOF)
+		{
+			buffer = realloc(buffer, (length + 1) * sizeof(char));
+			buffer[length] = '\0';
+>>>>>>> 456336d0a1b275590bb88a57257f7c00e1024f4a
 			break;
 		buffer[i] = c;
 		i++;
@@ -71,7 +86,12 @@ char* cpyLineToBuff(FILE* file)
 			realloc_s(&line, buffer, i);
 			i = 0;
 		}
+<<<<<<< HEAD
 		c = fgetc(file);
+=======
+		buffer = realloc(buffer, (length + 1) * sizeof(char));
+		buffer[length] = c;
+>>>>>>> 456336d0a1b275590bb88a57257f7c00e1024f4a
 	}
 	realloc_s(&line, buffer, i);
 
