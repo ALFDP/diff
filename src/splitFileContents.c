@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "splitFileContents.h"
 
 
@@ -26,7 +22,13 @@ FileContent* pushFileToStruct(char *filePath) {
 
 	elem = malloc(sizeof(FileContent));
 
-	// Geting line number from the file
+	// Getting file info
+	elem->fileInfo = getDataFile(filePath);
+
+	// Transform Latest Modification Time to string
+	elem->modifiedTime = getFTime(elem->fileInfo->st_mtime);
+	
+	// Getting line number from the file
 	nbLine = getLineNumber(file);
 
 	// Here, all the line of the file are put in char tab, one char tab for one line
@@ -42,6 +44,38 @@ FileContent* pushFileToStruct(char *filePath) {
 
 	return elem;
 }
+
+// Get data associated with file in parameter
+struct _stat* getDataFile(char* path)
+{
+	struct _stat* buf;
+	int result;
+
+	buf = malloc(sizeof(struct _stat));
+
+	// Get data
+	result = _stat(path, buf);
+
+	if (result != 0)
+	{
+		perror("Problem getting information");
+		switch (errno)
+		{
+		case ENOENT:
+			printf("File %s not found.\n", path);
+			break;
+		case EINVAL:
+			printf("Invalid parameter to _stat.\n");
+			break;
+		default:
+			/* Should never be reached. */
+			printf("Unexpected error in _stat.\n");
+		}
+	}
+
+	return buf;
+}
+
 
 // This function get the number of line in the file in parameter
 int getLineNumber(FILE* file)
@@ -116,6 +150,7 @@ void freeStruct(FileContent* structToFree)
 		}
 
 		free(structToFree->elem);
+		free(structToFree->fileInfo);
 		free(structToFree);
 	}
 
@@ -220,4 +255,27 @@ void initBuffer(char *buffer, int size)
 		buffer[size - 1] = 0;
 		size--;
 	}
+}
+
+char* getFTime(__time64_t time)
+{
+	errno_t err;
+	char* timeBuf = malloc(26 * sizeof(char));
+	initBuffer(timeBuf, 26);
+	
+	if (timeBuf == NULL)
+	{
+		printf("ERROR: Failed Memory Allocation\n");
+		exit(EXIT_FAILURE);
+	}
+
+	err = ctime_s(timeBuf, 26, &time);
+
+	if (err)
+	{
+		printf("Invalid arguments to ctime_s.");
+		exit(EXIT_FAILURE);
+	}
+
+	return timeBuf;
 }
