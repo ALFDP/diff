@@ -13,4 +13,4 @@ enum OutputMode
 };
 
 
-void getOptions(int argc, char** argv);
+OutputMode getOptions(int argc, char** argv);
