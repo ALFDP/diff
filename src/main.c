@@ -61,9 +61,5 @@ int main(int argc, char** argv)
 		freeStruct(file2);
 	}
 	
-
-
-
-
 	return 0;
 }
