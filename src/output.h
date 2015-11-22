@@ -17,7 +17,7 @@
 
     typedef enum
     {
-        FULL = 0x07
+        FULL = 0x07,
         MODIF = 0x04,
         DELETION = 0x02,
         ADDITION = 0x01,

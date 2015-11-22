@@ -21,6 +21,7 @@ struct FileContent
 	unsigned int nbLine;
 	struct _stat* fileInfo;
 	char* modifiedTime;
+	char* path;
 };
 
 // Function's prototype

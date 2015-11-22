@@ -39,6 +39,7 @@ FileContent* pushFileToStruct(char *filePath) {
 		elem->elem[i] = getLine(file);
 	}
 
+	strcpy(elem->path, filePath);
 	elem->nbLine = nbLine;
 	fclose(file);
 
