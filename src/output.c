@@ -3,6 +3,7 @@
 void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
                         unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
 {
+    FileOperationMask editOperation = NONE;
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
     unsigned int i, leftIndex, rightIndex;
@@ -22,6 +23,8 @@ void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int
             nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, isCaseSensitive);
             nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, isCaseSensitive);
 
+            editOperation = (rightIndex < rightSize) | ((leftIndex < leftSize) << 1);
+
             printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, fileFinder);
         }
 
@@ -31,7 +34,6 @@ void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int
 
     if (leftIndex < leftSize || rightIndex < rightSize)
     {
-        FileOperationMask editOperation = NONE;
         nbLeftDiffs = leftSize - leftIndex;
         nbRightDiffs = rightSize - rightIndex;
 
