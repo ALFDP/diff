@@ -16,12 +16,12 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
         nbRightDiffs = 0;
 
         fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
-                        | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOTFOUND;
+                        | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOT_FOUND;
 
         if (fileFinder != NOT_FOUND)
         {
-            nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, options->isCaseSensitive_content);
-            nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, options->isCaseSensitive_content);
+            nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, isCaseSensitive);
+            nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, isCaseSensitive);
 
             printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, fileFinder);
         }
@@ -64,10 +64,10 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
 
 		if (fileFinder != NOT_FOUND)
         {
-            nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, options->isCaseSensitive_content);
-            nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, options->isCaseSensitive_content);
+            nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, isCaseSensitive);
+            nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, isCaseSensitive);
 
-            printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, options->nbContextLines);
+            printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, nbContextLines);
         }
 
         rightIndex += nbRightDiffs;
@@ -79,7 +79,7 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
         nbLeftDiffs = leftSize - leftIndex;
         nbRightDiffs = rightSize - rightIndex;
 
-            printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, options->nbContextLines);
+            printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, nbContextLines);
     }
 
 }
@@ -109,7 +109,7 @@ void printLabel(char* mark, char* path)
 }
 
 void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-				unsigned int nbRightDiffs, unsigned FileOperationMask editOperation) 
+				unsigned int nbRightDiffs, FileOperationMask editOperation) 
 {
 
     char editCode[] = {'a', 'd', 'c'};
