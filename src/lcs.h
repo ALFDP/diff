@@ -14,7 +14,7 @@
     void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int elementSize, void* defaultValue);
     StringComparator getComparisonMethod(unsigned char isCaseSensitive);
     char** LCS_extract(unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive);
-    void LCS_recursiveExtract(char** lcs, unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
+    void LCS_recursiveExtract(char*** lcs, unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
                           StringComparator compare, unsigned int index);
 
 #endif // LCS_H

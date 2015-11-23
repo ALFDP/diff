@@ -1,7 +1,7 @@
 #include "output.h"
 
 void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
-                        unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
+                        unsigned int rightSize, unsigned char isCaseSensitive)
 {
     FileOperationMask editOperation = NONE;
     StringComparator compare = getComparisonMethod(isCaseSensitive);
@@ -9,14 +9,15 @@ void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int
     unsigned int i, leftIndex, rightIndex;
     unsigned int nbLeftDiffs;
     unsigned int nbRightDiffs;
+	unsigned int lcsSize = leftSize > rightSize ? leftSize : rightSize;
 
     for (i = 0, leftIndex = 0, rightIndex = 0 ; i < lcsSize ; i++, leftIndex++, rightIndex++ )
     {
         nbLeftDiffs = 0;
         nbRightDiffs = 0;
 
-        fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
-                        | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOT_FOUND;
+        fileFinder = (compare(lcs[i], leftFile[leftIndex])?NOT_FOUND: FOUND_LEFT)
+                        | (compare(lcs[i], rightFile[rightIndex])?NOT_FOUND:FOUND_RIGHT);
 
         if (fileFinder != NOT_FOUND)
         {

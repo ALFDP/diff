@@ -24,7 +24,7 @@
     }FileOperationMask;
 
 	void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
-                        unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive);
+                        unsigned int rightSize, unsigned char isCaseSensitive);
 	void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize,
 						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive, unsigned int nbContextLines) ;
     void printLabel(char* mark, char* path);

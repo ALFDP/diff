@@ -4,13 +4,14 @@
 
 #include "splitFileContents.h"
 #include "folder.h"
+#include "output.h"
 
 // This pragma disable CRT warning 
 #pragma warning (disable : 4996)
 
 int main(int argc, char** argv)
 {
-	/*if (argc != 3) {
+	if (argc != 3) {
 		printf("ERROR: invalid argc parameter\n");
 		return 1;
 	}
@@ -20,12 +21,18 @@ int main(int argc, char** argv)
 
 	if (argc == 3)
 	{
+		unsigned int** matrix = NULL;
+		char ** lcs = NULL;
 		file1 = pushFileToStruct(argv[1]);
 		file2 = pushFileToStruct(argv[2]);
 
+
 		structDisplay(file1, TRUE);
-		printf("TIME : %s", file1->modifiedTime);
 		structDisplay(file2, TRUE);
+
+		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
+		lcs = LCS_extract(matrix, file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
+		printNormalDiff(file1->elem, file2->elem, lcs, file1->nbLine, file2->nbLine, TRUE);
 
 		freeStruct(file1);
 		freeStruct(file2);
@@ -42,7 +49,7 @@ int main(int argc, char** argv)
 
 		freeStruct(file1);
 		freeStruct(file2);
-	} */
+	} 
 	
 	getFolder(argv[1]);
 

@@ -85,7 +85,7 @@ void logQuit()
 **/
 LoggerConfig getLoggerConfig()
 {
-    return getLoggerConfig(NULL);
+    return setLoggerConfig(NULL);
 }
 
 /**
