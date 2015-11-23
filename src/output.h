@@ -29,11 +29,11 @@
 						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive) ;
     void printLabel(char* mark, char* path);
     void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-					unsigned int nbRightDiffs, unsigned FileOperationMask editOperation);
+					unsigned int nbRightDiffs,  FileOperationMask editOperation);
 	void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, unsigned int rightSize, unsigned int leftIndex,
 							unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines);
     void printLabel(char* mark, char* path);
-	unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive) 
+	unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive);
     void printLines(char** file, unsigned int start, unsigned int count, char symbol);
     void printLines2(char** file, unsigned int size, unsigned int start, unsigned int count, char symbol);
     void printRange(unsigned int start, unsigned int count);

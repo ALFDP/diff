@@ -109,7 +109,7 @@ void printLabel(char* mark, char* path)
 }
 
 void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-				unsigned int nbRightDiffs, unsigned FileOperationMask editOperation) 
+				unsigned int nbRightDiffs,  FileOperationMask editOperation) 
 {
 
     char editCode[] = {'a', 'd', 'c'};

@@ -3,13 +3,14 @@
 #include <string.h>
 
 #include "splitFileContents.h"
+#include "folder.h"
 
 // This pragma disable CRT warning 
 #pragma warning (disable : 4996)
 
 int main(int argc, char** argv)
 {
-	if (argc != 3) {
+	/*if (argc != 3) {
 		printf("ERROR: invalid argc parameter\n");
 		return 1;
 	}
@@ -41,7 +42,9 @@ int main(int argc, char** argv)
 
 		freeStruct(file1);
 		freeStruct(file2);
-	}
+	} */
 	
+	getFolder(argv[1]);
+
 	return 0;
 }

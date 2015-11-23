@@ -5,3 +5,5 @@
 #include <dirent.h>
 #include <errno.h>
 
+int getFolder(char* path);
+
