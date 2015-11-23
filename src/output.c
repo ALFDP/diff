@@ -20,7 +20,7 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
         fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
                         | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOTFOUND;
 
-        if (!fileFounder == NOT_FOUND)
+        if (!fileFinder == NOT_FOUND)
         {
 			/* counting successive diffs */
             nbLeftDiffs = get_nb_lines_until_found(leftFile, lcs[i], leftIndex, leftSize, options->ignore_case_content);
