@@ -17,19 +17,25 @@
 
     typedef enum
     {
-        FULL = 0x07,
-        MODIF = 0x04,
-        DELETION = 0x02,
-        ADDITION = 0x01,
+        MOD = 0x03,
+        DEL = 0x02,
+        ADD = 0x01,
         NONE = 0x00
     }FileOperationMask;
-
-    void print_edit(char** file_a, char** file_b, int idx_a, int idx_b, int nb_diff_a, int nb_diff_b, int edit_type);
-    void print_edit_unified(char** file_a, int size_a, char** file_b, int size_b, int idx_a, int idx_b, int nb_diff_a, int nb_diff_b, int nb_context_lines);
-    void print_label(char* mark, char* path);
-    void print_lines(char** file, int start, int count, char symbol);
-    void print_lines2(char** file, int size, int start, int count, char symbol);
-    void print_range(int start, int count);
-    int get_nb_lines_until_found(char** file, char* string, int start, int size, unsigned char ignore_case);
+	
+	void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsigned int leftSize,
+                        unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive);
+	void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize, 
+						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive) ;
+    void printLabel(char* mark, char* path);
+    void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
+					unsigned int nbRightDiffs, unsigned FileOperationMask editOperation);
+	void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, unsigned int rightSize, unsigned int leftIndex,
+							unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines);
+    void printLabel(char* mark, char* path);
+	unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive) 
+    void printLines(char** file, unsigned int start, unsigned int count, char symbol);
+    void printLines2(char** file, unsigned int size, unsigned int start, unsigned int count, char symbol);
+    void printRange(unsigned int start, unsigned int count);
 
 #endif // OUTPUT_H_INCLUDED
