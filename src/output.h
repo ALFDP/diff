@@ -22,10 +22,10 @@
         ADD = 0x01,
         NONE = 0x00
     }FileOperationMask;
-	
-	void printNormalDiff(char** leftFile, char** rightFile, unsigned char** lcs, unsigned int leftSize,
+
+	void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
                         unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive);
-	void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize, 
+	void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize,
 						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive, unsigned int nbContextLines) ;
     void printLabel(char* mark, char* path);
     void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,

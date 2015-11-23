@@ -1,11 +1,10 @@
 #include "output.h"
 
-void printNormalDiff(char** leftFile, char** rightFile, unsigned char** lcs, unsigned int leftSize,
+void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
                         unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
 {
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
-	FileOperationMask editOperation = NONE;
     unsigned int i, leftIndex, rightIndex;
     unsigned int nbLeftDiffs;
     unsigned int nbRightDiffs;
@@ -32,17 +31,18 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned char** lcs, uns
 
     if (leftIndex < leftSize || rightIndex < rightSize)
     {
+        FileOperationMask editOperation = NONE;
         nbLeftDiffs = leftSize - leftIndex;
         nbRightDiffs = rightSize - rightIndex;
 
-        editOperation = (rightIndex < rightSize) | (leftIndex < leftSize) << 1;
+        editOperation = (rightIndex < rightSize) | ((leftIndex < leftSize) << 1);
 
-        printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, fileFinder);
+        printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, editOperation);
     }
 
 }
 
-void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize, 
+void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize,
 						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive, unsigned int nbContextLines)
 {
 	StringComparator compare = getComparisonMethod(isCaseSensitive);
@@ -85,7 +85,7 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
 }
 
 /* TODO */
-void printLabel(char* mark, char* path) 
+void printLabel(char* mark, char* path)
 {
 
     char buffer[512];
@@ -109,7 +109,7 @@ void printLabel(char* mark, char* path)
 }
 
 void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-				unsigned int nbRightDiffs, FileOperationMask editOperation) 
+				unsigned int nbRightDiffs, FileOperationMask editOperation)
 {
 
     char editCode[] = {'a', 'd', 'c'};
@@ -118,7 +118,7 @@ void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsign
     printf("%c", editCode[editOperation-1]);
     printRange(rightIndex, nbRightDiffs);
 
-    printf('\n');
+    printf("\n");
 
     if (editOperation == ADD)
         printLines(rightFile, rightIndex, nbRightDiffs, '>');
@@ -134,7 +134,7 @@ void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsign
 }
 
 void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, unsigned int rightSize, unsigned int leftIndex,
-						unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines) 
+						unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines)
 {
 
     unsigned int nbContextLinesBefore = nbContextLines<leftIndex?nbContextLines:leftIndex;
@@ -156,7 +156,7 @@ void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, 
 
 }
 
-unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive) 
+unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive)
 {
 
     unsigned int i;
@@ -168,7 +168,7 @@ unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsign
 
 }
 
-void printLines(char** file, unsigned int start, unsigned int count, char symbol) 
+void printLines(char** file, unsigned int start, unsigned int count, char symbol)
 {
 
     unsigned int i;
