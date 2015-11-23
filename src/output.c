@@ -3,7 +3,7 @@
 void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsigned int leftSize,
                         unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
 {
-    inputComparator compare = getComparisonMethod(isCaseSensitive);
+    StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
 	FileOperationMask editOperation = NONE;
     unsigned int i, leftIndex, rightIndex;
@@ -160,7 +160,7 @@ unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsign
 {
 
     unsigned int i;
-	inputComparator compare = getComparisonMethod(isCaseSensitive);
+	StringComparator compare = getComparisonMethod(isCaseSensitive);
 
     for (i = 0 ; i < size && compare(file[i + start], input) != 0 ; i++ );
 

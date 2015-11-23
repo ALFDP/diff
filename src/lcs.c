@@ -24,7 +24,7 @@ Builds the LCS matrix
 unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char isCaseSensitive)
 {
     unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int), 0);
-    inputComparator compare = getComparisonMethod(isCaseSensitive);
+    StringComparator compare = getComparisonMethod(isCaseSensitive);
     register unsigned int i, j;
 
     for (i = 1 ; i < leftSize ; i++)
@@ -46,7 +46,7 @@ unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftS
 
 char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive)
 {
-    inputComparator compare = getComparisonMethod(isCaseSensitive);
+    StringComparator compare = getComparisonMethod(isCaseSensitive);
     char **lcs = (char**)scalloc((leftSize>rightSize?leftSize:rightSize) * sizeof(char*));
 
     LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize, rightSize, compare, 0);
@@ -55,7 +55,7 @@ char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, i
 }
 
 void LCS_recursiveExtract(char** lcs, char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
-                          inputComparator compare, unsigned int index)
+                          StringComparator compare, unsigned int index)
 {
     if (leftSize == 0 || rightSize == 0)
         return;
@@ -120,7 +120,7 @@ Returns the correct string comparator
 @return The corresponding input comparator.
 
 **/
-inputComparator getComparisonMethod(unsigned char isCaseSensitive)
+StringComparator getComparisonMethod(unsigned char isCaseSensitive)
 {
     return isCaseSensitive?strcmp:stricmp;
 }
