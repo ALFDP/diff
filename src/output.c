@@ -25,7 +25,7 @@ void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int
 
             editOperation = (rightIndex < rightSize) | ((leftIndex < leftSize) << 1);
 
-            printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, fileFinder);
+            printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, editOperation);
         }
 
         leftIndex += nbLeftDiffs;
