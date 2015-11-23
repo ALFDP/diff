@@ -1,6 +1,6 @@
 #include "output.h"
 
-void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsigned int leftSize,
+void printNormalDiff(char** leftFile, char** rightFile, unsigned char** lcs, unsigned int leftSize,
                         unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
 {
     StringComparator compare = getComparisonMethod(isCaseSensitive);
@@ -43,9 +43,9 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
 }
 
 void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize, 
-						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive) 
+						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive, unsigned int nbContextLines)
 {
-
+	StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
     unsigned int i, leftIndex = 0, rightIndex = 0;
     unsigned int nbLeftDiffs;
@@ -88,7 +88,7 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
 void printLabel(char* mark, char* path) 
 {
 
-    char buffer[512] = {};
+    char buffer[512];
     struct tm *info_time = NULL;
     time_t raw_time = 0;
     time(&raw_time);

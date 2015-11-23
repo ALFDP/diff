@@ -1,4 +1,5 @@
 #include "logger.h"
+#pragma warning (disable : 4996)
 
 /**
 

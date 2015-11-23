@@ -1,5 +1,5 @@
 #include "alloc.h"
-
+#pragma warning (disable : 4996)
 /**
 
 Safer memory treatments in order to abort redefining them everywhere

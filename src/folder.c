@@ -9,7 +9,11 @@ int getFolder(char* path)
 	if (rep == NULL)
 		exit(EXIT_FAILURE);
 
-	readFile = readdir(rep);
+	while ((readFile = readdir(rep)) != NULL)
+		printf(" %s\n",readFile->d_name);
+	
+
+	
 
 	if (closedir(rep) == -1)
 		exit(EXIT_FAILURE);

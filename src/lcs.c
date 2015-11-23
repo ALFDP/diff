@@ -1,4 +1,6 @@
 #include "lcs.h"
+#pragma warning (disable : 4996)
+
 
 /**
 
@@ -23,7 +25,8 @@ Builds the LCS matrix
 **/
 unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char isCaseSensitive)
 {
-    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int), 0);
+	unsigned int defaultValue = 0;
+    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int), &defaultValue);
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     register unsigned int i, j;
 
@@ -93,8 +96,8 @@ void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int eleme
     void **matrix = NULL;
     register unsigned int i, j;
 
-    matrix = (void**)smalloc(xSize * sizeof(void*));
-
+    //matrix = smalloc(xSize * sizeof(void*));
+	matrix = malloc(xSize * sizeof(void*));
     for (i = 0 ; i < xSize ; i++)
     {
         if(ySize > 0)
@@ -105,7 +108,8 @@ void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int eleme
 
     for (j = 0 ; j < ySize  ; j++)
     {
-        memcpy(matrix[i] + j * elementSize, defaultValue, elementSize);
+		memcpy(matrix + i + j * elementSize, defaultValue, elementSize);
+		//memcpy(matrix[i], defaultValue, elementSize);
     }
 
     return matrix;
