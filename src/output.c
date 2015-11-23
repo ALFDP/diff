@@ -18,7 +18,11 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
         fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
                         | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOTFOUND;
 
+<<<<<<< HEAD
+        if (!fileFinder == NOT_FOUND)
+=======
         if (fileFinder != NOT_FOUND)
+>>>>>>> 4d451a58e334b8c10b3fd0351f566860cafe6ee2
         {
             nbLeftDiffs = getNbDiffLines(leftFile, lcs[i], leftIndex, leftSize, options->isCaseSensitive_content);
             nbRightDiffs = getNbDiffLines(rightFile, lcs[i], rightIndex, rightSize, options->isCaseSensitive_content);
