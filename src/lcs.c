@@ -47,7 +47,7 @@ unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftS
     return matrix;
 }
 
-char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive)
+char** LCS_extract(unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive)
 {
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     char **lcs = (char**)scalloc((leftSize>rightSize?leftSize:rightSize) * sizeof(char*));
@@ -57,7 +57,7 @@ char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, i
     return lcs;
 }
 
-void LCS_recursiveExtract(char** lcs, char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
+void LCS_recursiveExtract(char** lcs, unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
                           StringComparator compare, unsigned int index)
 {
     if (leftSize == 0 || rightSize == 0)

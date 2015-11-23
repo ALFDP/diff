@@ -1,7 +1,7 @@
-#include "logger/logger.h"
-#include "lcs.h"
+#include "../logger/logger.h"
+#include "../lcs.h"
 
-int main(int argc, char** argv)
+int __main(int argc, char** argv)
 {
 
     char **testIn1 = malloc(5 * sizeof(char*));
