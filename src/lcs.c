@@ -108,8 +108,8 @@ void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int eleme
 
     for (j = 0 ; j < ySize  ; j++)
     {
-		memcpy(matrix + i + j * elementSize, defaultValue, elementSize);
-		//memcpy(matrix[i], defaultValue, elementSize);
+		//memcpy(matrix + i + j * elementSize, defaultValue, elementSize);
+		memcpy(matrix[i] + j * elementSize, defaultValue, elementSize);
     }
 
     return matrix;
