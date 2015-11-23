@@ -10,10 +10,10 @@
 
     typedef int (*StringComparator)(const char*, const char*);
 
-    unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char ignoreCase);
+    unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char isCaseSensitive);
     void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int elementSize, void* defaultValue);
-    StringComparator getComparisonMethod(unsigned char ignoreCase);
-    char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char ignoreCase);
+    StringComparator getComparisonMethod(unsigned char isCaseSensitive);
+    char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive);
     void LCS_recursiveExtract(char** lcs, char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
                           StringComparator compare, unsigned int index);
 

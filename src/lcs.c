@@ -21,10 +21,10 @@ Builds the LCS matrix
 @return The LCS matrix
 
 **/
-unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char ignoreCase)
+unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char isCaseSensitive)
 {
-    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize, rightSize, sizeof(unsigned int), 0);
-    StringComparator compare = getComparisonMethod(ignoreCase);
+    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int), 0);
+    inputComparator compare = getComparisonMethod(isCaseSensitive);
     register unsigned int i, j;
 
     for (i = 1 ; i < leftSize ; i++)
@@ -44,9 +44,9 @@ unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftS
     return matrix;
 }
 
-char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char ignoreCase)
+char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive)
 {
-    StringComparator compare = getComparisonMethod(ignoreCase);
+    inputComparator compare = getComparisonMethod(isCaseSensitive);
     char **lcs = (char**)scalloc((leftSize>rightSize?leftSize:rightSize) * sizeof(char*));
 
     LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize, rightSize, compare, 0);
@@ -55,7 +55,7 @@ char** LCS_extract(char** matrix, char** leftIn, char** rightIn, int leftSize, i
 }
 
 void LCS_recursiveExtract(char** lcs, char** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
-                          StringComparator compare, unsigned int index)
+                          inputComparator compare, unsigned int index)
 {
     if (leftSize == 0 || rightSize == 0)
         return;
@@ -115,12 +115,12 @@ void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int eleme
 
 Returns the correct string comparator
 
-@param ignoreCase defines if comparison will or will not be case-sensitive.
+@param isCaseSensitive defines if comparison will or will not be case-sensitive.
 
-@return The corresponding string comparator.
+@return The corresponding input comparator.
 
 **/
-StringComparator getComparisonMethod(unsigned char ignoreCase)
+inputComparator getComparisonMethod(unsigned char isCaseSensitive)
 {
-    return ignoreCase?stricmp:strcmp;
+    return isCaseSensitive?strcmp:stricmp;
 }
