@@ -160,3 +160,32 @@ void initTab(int* tab, int size)
 		size--;
 	}
 }
+
+int printReport(FileContent* file1, FileContent* file2, int option)
+{
+	int i = 0, j = 0, lineF1 = file1->nbLine, lineF2 = file2->nbLine;
+	char** txt1 = file1->elem;
+	char** txt2 = file2->elem;
+
+	for (i = 0, j = 0; i < lineF1, j < lineF2; i++, j++)
+	{
+		if (strcmp(txt1[i], txt2[i]) != 0)
+		{
+			if (option == 0)
+			{
+				printf("Files are different\n");
+				return 0;
+			}
+			else
+				return 0;
+		}
+	}
+	if (option == 1)
+	{
+		printf("Files are identical\n");
+		return 0;
+	}
+
+	else
+		return 0;
+}
