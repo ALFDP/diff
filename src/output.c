@@ -1,11 +1,30 @@
 #include "output.h"
 
-void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsigned int leftSize,
-                        unsigned int rightSize, unsigned int lcsSize, unsigned char isCaseSensitive)
+/**
+
+Defines the LCS algorithm output treatments.
+
+@author Aurélien DUVAL
+
+**/
+
+/**
+
+Prints the standard diff output
+
+@param leftFile The older file of both
+@param rightFile The newer file of both
+@param lcs The extracted lcs matrix
+@param lcsSize The lcs array size
+@param leftSize The left file buffered array size
+@param rightSize The right file buffered array size
+
+**/
+void printStandardDiff(char** leftFile, char** rightFile, char** lcs, unsigned int lcsSize, unsigned int leftSize,
+                        unsigned int rightSize, unsigned char isCaseSensitive)
 {
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
-	FileOperationMask editOperation = NONE;
     unsigned int i, leftIndex, rightIndex;
     unsigned int nbLeftDiffs;
     unsigned int nbRightDiffs;
@@ -15,8 +34,8 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
         nbLeftDiffs = 0;
         nbRightDiffs = 0;
 
-        fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
-                        | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOT_FOUND;
+        fileFinder = (compare(lcs[i], leftFile[leftIndex])?NOT_FOUND: FOUND_LEFT)
+                        | (compare(lcs[i], rightFile[rightIndex])?NOT_FOUND:FOUND_RIGHT);
 
         if (fileFinder != NOT_FOUND)
         {
@@ -35,17 +54,34 @@ void printNormalDiff(char** leftFile, char** rightFile, unsigned int** lcs, unsi
         nbLeftDiffs = leftSize - leftIndex;
         nbRightDiffs = rightSize - rightIndex;
 
-        editOperation = (rightIndex < rightSize) | (leftIndex < leftSize) << 1;
+        fileFinder = (leftIndex < leftSize?FOUND_LEFT:NOT_FOUND) | (rightIndex < rightSize?FOUND_RIGHT:NOT_FOUND);
 
         printEdit(leftFile, rightFile, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, fileFinder);
     }
 
 }
 
-void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize, 
-						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive) 
-{
+/**
 
+Prints the standard diff output
+
+@param leftFilePath The left file's path
+@param rightFilePath The right file's path
+@param leftFile The older file of both
+@param leftSize The left file buffered array size
+@param rightFile The newer file of both
+@param rightSize The right file buffered array size
+@param lcs The extracted lcs matrix
+@param lcsSize The lcs array size
+@param isCaseSensitive Check string using case sensitive or insensitive process
+@param nbContextLines The number of context lines you want to show before and after each output
+
+**/
+void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize,
+						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize,
+						 unsigned char isCaseSensitive, unsigned int nbContextLines)
+{
+	StringComparator compare = getComparisonMethod(isCaseSensitive);
     FileFinderMask fileFinder = NOT_FOUND;
     unsigned int i, leftIndex = 0, rightIndex = 0;
     unsigned int nbLeftDiffs;
@@ -53,14 +89,15 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
 
     printLabel("---", leftFilePath);
     printLabel("+++", rightFilePath);
+    printf("\n");
 
     for (i = 0 ; i < lcsSize ; i++, leftIndex++,rightIndex++)
     {
         nbLeftDiffs = 0;
         nbRightDiffs = 0;
 
-        fileFinder = !compare(lcs[i], leftFile[leftIndex])?FOUND_LEFT:NOT_FOUND
-                        | !compare(lcs[i], rightFile[rightIndex])?FOUND_RIGHT:NOT_FOUND;
+        fileFinder = (compare(lcs[i], leftFile[leftIndex])?NOT_FOUND: FOUND_LEFT)
+                        | (compare(lcs[i], rightFile[rightIndex])?NOT_FOUND:FOUND_RIGHT);
 
 		if (fileFinder != NOT_FOUND)
         {
@@ -79,16 +116,18 @@ void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, 
         nbLeftDiffs = leftSize - leftIndex;
         nbRightDiffs = rightSize - rightIndex;
 
-            printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, nbContextLines);
+        fileFinder = (leftIndex < leftSize?FOUND_LEFT:NOT_FOUND) | (rightIndex < rightSize?FOUND_RIGHT:NOT_FOUND);
+
+        printUnifiedEdit(leftFile, leftSize, rightFile, rightSize, leftIndex, rightIndex, nbLeftDiffs, nbRightDiffs, nbContextLines);
     }
 
 }
 
 /* TODO */
-void printLabel(char* mark, char* path) 
+void printLabel(char* mark, char* path)
 {
 
-    char buffer[512] = {};
+    char buffer[512];
     struct tm *info_time = NULL;
     time_t raw_time = 0;
     time(&raw_time);
@@ -108,33 +147,66 @@ void printLabel(char* mark, char* path)
 
 }
 
+/**
+
+Prints the standard diff edition part of the output
+
+@param leftFile The older file of both
+@param rightFile The newer file of both
+@param leftIndex The line number of the virtual cursor in left file
+@param rightIndex The line number of the virtual cursor in right File
+@param nbLeftDiffs Detected consecutive diffs number on the left file
+@param lcsSize Detected consecutive diffs number on therightt file
+@param fileFinder The binary mask of the result of the research
+
+**/
 void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-				unsigned int nbRightDiffs, FileOperationMask editOperation) 
+				unsigned int nbRightDiffs, FileFinderMask fileFinder)
 {
 
     char editCode[] = {'a', 'd', 'c'};
 
     printRange(leftIndex, nbLeftDiffs);
-    printf("%c", editCode[editOperation-1]);
+    printf("%c", editCode[fileFinder-1]);
     printRange(rightIndex, nbRightDiffs);
 
-    printf('\n');
+    printf("\n");
 
-    if (editOperation == ADD)
+    /// ADD
+    if (fileFinder == FOUND_LEFT)
         printLines(rightFile, rightIndex, nbRightDiffs, '>');
-    else if (editOperation == DEL)
+    /// DEL
+    else if (fileFinder == FOUND_RIGHT)
         printLines(leftFile, leftIndex, nbLeftDiffs, '<');
-    else if (editOperation == MOD)
+    /// MOD
+    else if (fileFinder == FOUND_BOTH)
     {
         printLines(leftFile, leftIndex, nbLeftDiffs, '<');
-        puts("---");
+        printf("\n---\n");
         printLines(rightFile, rightIndex, nbRightDiffs, '>');
     }
 
+     printf("\n");
+
 }
 
+/**
+
+Prints the unified diff edition part of the output
+
+@param leftFile The older file of both
+@param leftSize The left file buffered array size
+@param rightFile The newer file of both
+@param leftSize The right file buffered array size
+@param leftIndex The line number of the virtual cursor in left file
+@param rightIndex The line number of the virtual cursor in right File
+@param nbLeftDiffs Detected consecutive diffs number on the left file
+@param lcsSize Detected consecutive diffs number on therightt file
+@param nbContextLines The number of context lines you want to show before and after each output
+
+**/
 void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, unsigned int rightSize, unsigned int leftIndex,
-						unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines) 
+						unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines)
 {
 
     unsigned int nbContextLinesBefore = nbContextLines<leftIndex?nbContextLines:leftIndex;
@@ -153,10 +225,11 @@ void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, 
     printLines2(leftFile, leftSize, leftIndex, nbLeftDiffs, '-');
     printLines2(rightFile, rightSize, rightIndex, nbRightDiffs, '+');
     printLines2(leftFile, leftSize, leftIndex + nbLeftDiffs, nbContextLinesAfter, ' ');
+    printf("\n");
 
 }
 
-unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive) 
+unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsigned int size, unsigned char isCaseSensitive)
 {
 
     unsigned int i;
@@ -168,12 +241,12 @@ unsigned int getNbDiffLines(char** file, char* input, unsigned int start, unsign
 
 }
 
-void printLines(char** file, unsigned int start, unsigned int count, char symbol) 
+void printLines(char** file, unsigned int start, unsigned int count, char symbol)
 {
 
     unsigned int i;
     for (i = 0 ; i < count ; i++ )
-        printf("%c %s", symbol, file[start + i]);
+        printf("%c %s\n", symbol, file[start + i]);
 }
 
 void printLines2(char** file, unsigned int size, unsigned int start, unsigned int count, char symbol)
@@ -181,7 +254,7 @@ void printLines2(char** file, unsigned int size, unsigned int start, unsigned in
 
     unsigned int i;
     for (i = start ; i < (start + count) && i < size ; i++ )
-        printf("%c %s", symbol, file[i]);
+        printf("%c %s\n", symbol, file[i]);
 }
 
 void printRange(unsigned int start, unsigned int count)

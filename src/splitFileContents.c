@@ -1,8 +1,9 @@
 #include "splitFileContents.h"
+#pragma warning (disable : 4996)
 
 
 // This function is the main function to set up the structure from file
-// The parameter is the path of the file 
+// The parameter is the path of the file
 // The function a pointer to the new structure
 FileContent* pushFileToStruct(char *filePath) {
 	// Checking if the file path is empty, if null the program will be close by exit function
@@ -12,8 +13,8 @@ FileContent* pushFileToStruct(char *filePath) {
 	FILE* file = NULL;
 
 	file = fopen(filePath, "r");
-	
-	// Checking if the file is open, if the opening has failed we close the program 
+
+	// Checking if the file is open, if the opening has failed we close the program
 	if (file == NULL)
 		exit(EXIT_FAILURE);
 
@@ -27,7 +28,7 @@ FileContent* pushFileToStruct(char *filePath) {
 
 	// Transform Latest Modification Time to string
 	elem->modifiedTime = getFTime(elem->fileInfo->st_mtime);
-	
+
 	// Getting line number from the file
 	nbLine = getLineNumber(file);
 
@@ -38,7 +39,7 @@ FileContent* pushFileToStruct(char *filePath) {
 	{
 		elem->elem[i] = getLine(file);
 	}
-
+	elem->path = malloc((strlen(filePath) + 1)*sizeof(char));
 	strcpy(elem->path, filePath);
 	elem->nbLine = nbLine;
 	fclose(file);
@@ -84,7 +85,7 @@ int getLineNumber(FILE* file)
 	int c = 0, count = 0;
 
 	// Obtain number of line
-	
+
 	while ((c = fgetc(file)) != EOF)
 	{
 		if (c == '\n')
@@ -99,25 +100,25 @@ int getLineNumber(FILE* file)
 	return count;
 }
 
-// This function get line in the file and return it as char* 
+// This function get line in the file and return it as char*
 char* getLine(FILE* file)
 {
 	char *line = NULL;
 	char buffer[BUFSIZ];
 	int i = 0, c = 0;
 
-	initBuffer(&buffer[0], BUFSIZ);	
+	initBuffer(&buffer[0], BUFSIZ);
 	c = fgetc(file);
 
 	// This while get char by char in the file and put them in buffer var
-	// If the buffer is full, we flush it in the line char* 
+	// If the buffer is full, we flush it in the line char*
 	// This method limite malloc use
 	while (1)
 	{
 		// If the cursor reach the end of the line or the fil, we break the while
 		if (c == '\n' || c== '\0' || c == EOF)
 			break;
-		
+
 		buffer[i] = c;
 		i++;
 		if (i == BUFSIZ)
@@ -158,7 +159,7 @@ void freeStruct(FileContent* structToFree)
 }
 
 // This function display all the line in the struct
-// The second paramter is a bool to display or not the line number 
+// The second paramter is a bool to display or not the line number
 void structDisplay(FileContent* structToDisplay, int displayLine)
 {
 	if (structToDisplay == NULL)
@@ -181,7 +182,7 @@ void structDisplay(FileContent* structToDisplay, int displayLine)
 	}
 }
 
-// This is a custom realloc functon to set up our line 
+// This is a custom realloc functon to set up our line
 // First paramter is the string to change size, second the string to cpy in the first, and the third the number of elements to cpy
 int realloc_s(char** line, char* toCpy, int nbELem)
 {
@@ -216,7 +217,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 			free(temp);
 			return 1;
 		}
-		// We reput our first content in his place 
+		// We reput our first content in his place
 		for (i = 0; i < length; i++)
 		{
 			line[0][i] = temp[i];
@@ -225,7 +226,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 		// We free the temp string we won't use it anymore
 		free(temp);
 
-		// We concat the new content after the old one in our string 
+		// We concat the new content after the old one in our string
 		for (i = 0; i < nbELem; i++)
 		{
 			line[0][length + i] = toCpy[i];
@@ -244,7 +245,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 		}
 		line[0][nbELem] = '\0';
 	}
-	
+
 	return 0;
 }
 
@@ -260,10 +261,10 @@ void initBuffer(char *buffer, int size)
 
 char* getFTime(__time64_t time)
 {
-	errno_t err;
+/*	errno_t err;
 	char* timeBuf = malloc(26 * sizeof(char));
 	initBuffer(timeBuf, 26);
-	
+
 	if (timeBuf == NULL)
 	{
 		printf("ERROR: Failed Memory Allocation\n");
@@ -278,5 +279,7 @@ char* getFTime(__time64_t time)
 		exit(EXIT_FAILURE);
 	}
 
-	return timeBuf;
+	return timeBuf;*/
+
+	return "abc";
 }

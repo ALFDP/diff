@@ -1,4 +1,5 @@
 #include "logger.h"
+#pragma warning (disable : 4996)
 
 /**
 
@@ -84,7 +85,7 @@ void logQuit()
 **/
 LoggerConfig getLoggerConfig()
 {
-    return getLoggerConfig(NULL);
+    return setLoggerConfig(NULL);
 }
 
 /**
