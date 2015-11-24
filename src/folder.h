@@ -7,4 +7,5 @@
 #include <errno.h>
 
 int getFolder(char* path);
+int isFolder(char* path);
 
