@@ -259,9 +259,9 @@ void initBuffer(char *buffer, int size)
 	}
 }
 
-char* getFTime(__time64_t time)
+char* getFTime(__time64_t timeToCpy)
 {
-	errno_t err;
+
 	char* timeBuf = malloc(26 * sizeof(char));
 	initBuffer(timeBuf, 26);
 	
@@ -270,14 +270,10 @@ char* getFTime(__time64_t time)
 		printf("ERROR: Failed Memory Allocation\n");
 		exit(EXIT_FAILURE);
 	}
+	
+	time(&timeToCpy);
+	timeBuf = ctime(&timeToCpy);
 
-	err = ctime_s(timeBuf, 26, &time);
-
-	if (err)
-	{
-		printf("Invalid arguments to ctime_s.");
-		exit(EXIT_FAILURE);
-	}
 
 	return timeBuf;
 }

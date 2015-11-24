@@ -4,6 +4,7 @@
 
 #include "splitFileContents.h"
 #include "folder.h"
+#include "options.h"
 #include "output.h"
 
 // This pragma disable CRT warning 
@@ -11,7 +12,7 @@
 
 int main(int argc, char** argv)
 {
-	if (argc != 3) {
+	if (argc < 3) {
 		printf("ERROR: invalid argc parameter\n");
 		return 1;
 	}
@@ -30,6 +31,9 @@ int main(int argc, char** argv)
 		structDisplay(file1, TRUE);
 		structDisplay(file2, TRUE);
 
+
+		printf("%s \n", file1->modifiedTime);
+
 		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
 		lcs = LCS_extract(matrix, file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
 		printNormalDiff(file1->elem, file2->elem, lcs, file1->nbLine, file2->nbLine, TRUE);
@@ -40,6 +44,10 @@ int main(int argc, char** argv)
 
 	else if (argc == 4)
 	{
+		OutputMode option;
+		option = getOptions(0, argv);
+
+		printf("option %d\n", option);
 	
 		file1 = pushFileToStruct(argv[2]);
 		file2 = pushFileToStruct(argv[3]);

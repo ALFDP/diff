@@ -33,4 +33,4 @@ void structDisplay(FileContent* structToDisplay, int displayLine);
 int realloc_s(char **line, char* toCpy, int nbELem);
 void initBuffer(char *buffer, int size);
 struct _stat* getDataFile(char* path);
-char* getFTime(__time64_t time);
+char* getFTime(__time64_t timeToCpy);
