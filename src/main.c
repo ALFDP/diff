@@ -81,12 +81,14 @@ int main(int argc, char** argv)
 			file1 = pushFileToStruct(argv[1]);
 			file2 = pushFileToStruct(argv[2]);
 
+			if (option == 0x16)
+				printReport(file1, file2, 0);
+			else if (option == 0x32)
+				printReport(file1, file2, 1);
 
-			structDisplay(file1, TRUE);
-			structDisplay(file2, TRUE);
 
 
-			printf("%s \n", file1->modifiedTime);
+
 
 			matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
 			lcs = LCS_extract(matrix, file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
