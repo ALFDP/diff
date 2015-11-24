@@ -20,3 +20,4 @@ enum OutputMode
 OutputMode getOptions(int argc, char** argv);
 int getLongOption(char** argv, int* i, OutputMode* option, int* checkTab, int longChar);
 void initTab(int* tab, int size);
+int printReport(FileContent* file1, FileContent* file2, int option);
