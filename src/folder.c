@@ -20,3 +20,17 @@ int getFolder(char* path)
 
 	return 0;
 }
+
+int isFolder(char* path)
+{
+	DIR* rep = NULL;
+	rep = opendir(path);
+
+	if (rep == NULL)
+		return FALSE;
+	else
+	{
+		closedir(rep);
+		return TRUE;
+	}
+}
