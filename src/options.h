@@ -21,4 +21,5 @@ enum OutputMode
 OutputMode getOptions(int argc, char** argv);
 int getLongOption(char** argv, int* i, OutputMode* option, int* checkTab, int longChar);
 void initTab(int* tab, int size);
-int printReport(FileContent* file1, FileContent* file2, int option, int caseSensitive);
+int printReport(FileContent* file1, FileContent* file2, int option, OutputMode options, int caseSensitive);
+void redirectOutput(OutputMode option, char* path1, char* path2, FileContent* file1, FileContent* file2);
