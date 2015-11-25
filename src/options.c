@@ -4,6 +4,7 @@
 
 #include "options.h"
 #include "splitFileContents.h"
+#include "lcs.h"
 
 OutputMode getOptions(int argc, char** argv) {
 
@@ -164,71 +165,33 @@ int printReport(FileContent* file1, FileContent* file2, int option, int caseSens
 	int i = 0, j = 0, lineF1 = file1->nbLine, lineF2 = file2->nbLine;
 	char** txt1 = file1->elem;
 	char** txt2 = file2->elem;
-	int res = 0;
 	
+	
+
 	if(file1->nbLine != file2->nbLine)
 	{
 		if (option == 0)
-		{
 			printf("Files are different\n");
-			return 0;
-		}
-		else
-			return 0;
-	}
-	
-	res = isEqual(txt1, txt2, lineF1, lineF2, caseSensitive);
-	
-	if(res == TRUE)
-	{
-		if(option == 0)
-		{
-			printf("Files are different\n");
-			return 0;
-		}
-		else
-			return 0;
-	}
-	else 
-	{
-		if(option != 0)
-		{
-			printf("File are identical");
-			return 0;
-		}
-		else
-			return 0;
-	}
-	
 
-}
+		return 0;
+	}
+	else {
+		StringComparator compare = getComparisonMethod(caseSensitive);
 
-int isEqual (char** txt1, char** txt2, int lineF1, int lineF2, int caseSensitive)
-{
-	int i = 0;
-	if (caseSensitive == TRUE)
-	{
 		for (i = 0; i < lineF1; i++)
 		{
-			if (strcmp(txt1[i], txt2[i]) != 0)
+			if (compare(txt1[i], txt2[i]) != 0)
 			{
-				return FALSE;
+				if (option == 0)
+					printf("File are different\n");
+				return 0;
 			}
 		}
+		if (option != 0)
+			printf("File are identical\n");
 
-		return TRUE;
+		return 0;
 	}
-	else
-	{
-		for (i = 0; i < lineF1; i++)
-		{
-			if (stricmp(txt1[i], txt2[i]) != 0)
-			{
-				return FALSE;
-			}
-		}
-
-		return TRUE;		
-	}
-	
 }
+
+
