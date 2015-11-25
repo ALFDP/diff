@@ -49,14 +49,10 @@ void* scalloc(unsigned int size)
 {
     void *array = NULL;
     char log[50] = "";
-	
-	unsigned char defaultValue = 0x00;
 
     if(size > 0)
     {
-        array = (void*)malloc(size);
-
-		memcpy(array, &defaultValue, 1);
+        array = (void*)calloc(size, 1);
 
         if(array == NULL)
         {
