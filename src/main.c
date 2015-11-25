@@ -112,10 +112,10 @@ int main(int argc, char** argv)
 				res = printReport(file1, file2, 1, TRUE);
 
 			else if (option == BRIEF_REPORT + NO_SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
-				res = printReport(file1, file2, 0, TRUE);
+				res = printReport(file1, file2, 0, FALSE);
 
 			else if (option == IDENTICAL_REPORT + NO_SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
-				res = printReport(file1, file2, 1, TRUE);
+				res = printReport(file1, file2, 1, FALSE);
 
 
 
