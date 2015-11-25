@@ -7,8 +7,8 @@
 #include "options.h"
 #include "output.h"
 
-// This pragma disable CRT warning 
-#pragma warning (disable : 4996)
+
+
 
 int main(int argc, char** argv)
 {
@@ -25,6 +25,7 @@ int main(int argc, char** argv)
 		unsigned int** matrix = NULL;
 		char ** lcs = NULL;
 		
+		
 		folderStatus1 = isFolder(argv[1]);
 		folderStatus2 = isFolder(argv[2]);
 
@@ -36,21 +37,15 @@ int main(int argc, char** argv)
 		{
 			FileContent* file1;
 			FileContent* file2;
+			unsigned int lcsSize = 0;
 
 			file1 = pushFileToStruct(argv[1]);
 			file2 = pushFileToStruct(argv[2]);
 
-
-			structDisplay(file1, TRUE);
-			structDisplay(file2, TRUE);
-
-
-			printf("%s \n", file1->modifiedTime);
-
 			matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
-			lcs = LCS_extract(matrix, file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
-			printNormalDiff(file1->elem, file2->elem, lcs, file1->nbLine, file2->nbLine, TRUE);
-
+			lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
+			printStandardDiff(file1->elem, file2->elem, matrix, lcsSize, file1->nbLine, file2->nbLine, TRUE);
+			
 			freeStruct(file1);
 			freeStruct(file2);
 		}
@@ -73,26 +68,56 @@ int main(int argc, char** argv)
 			FileContent* file1;
 			FileContent* file2;
 			OutputMode option;
+			unsigned int lcsSize = 0;
+			int res;
 
 			option = getOptions(0, argv);
 
-			printf("option %d\n", option);
-
-			file1 = pushFileToStruct(argv[1]);
-			file2 = pushFileToStruct(argv[2]);
-
-			if (option == 0x16)
-				printReport(file1, file2, 0);
-			else if (option == 0x32)
-				printReport(file1, file2, 1);
-
-
-
-
+			file1 = pushFileToStruct(argv[2]);
+			file2 = pushFileToStruct(argv[3]);
 
 			matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
-			lcs = LCS_extract(matrix, file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
-			printNormalDiff(file1->elem, file2->elem, lcs, file1->nbLine, file2->nbLine, TRUE);
+			lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
+
+			if (option == NORMAL_OUTPUT_MODE + SENSITIVE_CASE)
+			{
+				matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
+				lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
+				printStandardDiff(file1->elem, file2->elem, matrix, lcsSize, file1->nbLine, file2->nbLine, TRUE);
+			}
+			else if (option == UNIFIED_OUTPUT_MODE + SENSITIVE_CASE)
+			{
+				matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
+				lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
+				printUnifiedDiff(argv[2], argv[3], file1->elem, file1->nbLine, file2->elem, file2->nbLine, matrix, lcsSize, TRUE, 3);
+			}
+
+			else if (option == NORMAL_OUTPUT_MODE + NO_SENSITIVE_CASE)
+			{
+				matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, FALSE);
+				lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, FALSE);
+				printStandardDiff(file1->elem, file2->elem, matrix, lcsSize, file1->nbLine, file2->nbLine, FALSE);
+			}
+			else if (option == UNIFIED_OUTPUT_MODE + NO_SENSITIVE_CASE)
+			{
+				matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, FALSE);
+				lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, FALSE);
+				printUnifiedDiff(argv[2], argv[3], file1->elem, file1->nbLine, file2->elem, file2->nbLine, matrix, lcsSize, FALSE, 3);
+			}
+
+			else if (option == BRIEF_REPORT + SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
+				res = printReport(file1, file2, 0, TRUE);
+
+			else if (option == IDENTICAL_REPORT + SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
+				res = printReport(file1, file2, 1, TRUE);
+
+			else if (option == BRIEF_REPORT + NO_SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
+				res = printReport(file1, file2, 0, TRUE);
+
+			else if (option == IDENTICAL_REPORT + NO_SENSITIVE_CASE + NORMAL_OUTPUT_MODE)
+				res = printReport(file1, file2, 1, TRUE);
+
+
 
 			freeStruct(file1);
 			freeStruct(file2);

@@ -37,8 +37,6 @@ OutputMode getOptions(int argc, char** argv) {
 	if (tabOption[1] == FALSE)
 		options = options + SENSITIVE_CASE;
 
-	printf("Options: %d\n", options);
-
 	return options;
 }
 
@@ -161,31 +159,76 @@ void initTab(int* tab, int size)
 	}
 }
 
-int printReport(FileContent* file1, FileContent* file2, int option)
+int printReport(FileContent* file1, FileContent* file2, int option, int caseSensitive)
 {
 	int i = 0, j = 0, lineF1 = file1->nbLine, lineF2 = file2->nbLine;
 	char** txt1 = file1->elem;
 	char** txt2 = file2->elem;
-
-	for (i = 0, j = 0; i < lineF1, j < lineF2; i++, j++)
+	int res = 0;
+	
+	if(file1->nbLine != file2->nbLine)
 	{
-		if (strcmp(txt1[i], txt2[i]) != 0)
+		if (option == 0)
 		{
-			if (option == 0)
-			{
-				printf("Files are different\n");
-				return 0;
-			}
-			else
-				return 0;
+			printf("Files are different\n");
+			return 0;
 		}
+		else
+			return 0;
 	}
-	if (option == 1)
+	
+	res = isEqual(txt1, txt2, lineF1, lineF2, caseSensitive);
+	
+	if(res == TRUE)
 	{
-		printf("Files are identical\n");
-		return 0;
+		if(option == 0)
+		{
+			printf("Files are different\n");
+			return 0;
+		}
+		else
+			return 0;
 	}
+	else 
+	{
+		if(option != 0)
+		{
+			printf("File are identical");
+			return 0;
+		}
+		else
+			return 0;
+	}
+	
 
+}
+
+int isEqual (char** txt1, char** txt2, int lineF1, int lineF2, int caseSensitive)
+{
+	int i = 0;
+	if (caseSensitive == TRUE)
+	{
+		for (i = 0; i < lineF1; i++)
+		{
+			if (strcmp(txt1[i], txt2[i]) != 0)
+			{
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
 	else
-		return 0;
+	{
+		for (i = 0; i < lineF1; i++)
+		{
+			if (stricmp(txt1[i], txt2[i]) != 0)
+			{
+				return FALSE;
+			}
+		}
+
+		return TRUE;		
+	}
+	
 }

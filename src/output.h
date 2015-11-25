@@ -9,27 +9,20 @@
 
     typedef enum
     {
-        FOUND = 0x03,
+        FOUND_BOTH = 0x03,
         FOUND_RIGHT = 0x02,
         FOUND_LEFT = 0x01,
         NOT_FOUND = 0x00
     } FileFinderMask;
 
-    typedef enum
-    {
-        MOD = 0x03,
-        DEL = 0x02,
-        ADD = 0x01,
-        NONE = 0x00
-    }FileOperationMask;
-
-	void printNormalDiff(char** leftFile, char** rightFile, char** lcs, unsigned int leftSize,
+	void printStandardDiff(char** leftFile, char** rightFile, char** lcs, unsigned int lcsSize, unsigned int leftSize,
                         unsigned int rightSize, unsigned char isCaseSensitive);
 	void printUnifiedDiff(char* leftFilePath, char* rightFilePath, char** leftFile, unsigned int leftSize,
-						char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize, unsigned char isCaseSensitive, unsigned int nbContextLines) ;
+                            char** rightFile, unsigned int rightSize, char** lcs, unsigned int lcsSize,
+                             unsigned char isCaseSensitive, unsigned int nbContextLines) ;
     void printLabel(char* mark, char* path);
     void printEdit(char** leftFile, char** rightFile, unsigned int leftIndex, unsigned int rightIndex, unsigned int nbLeftDiffs,
-					unsigned int nbRightDiffs, FileOperationMask editOperation);
+					unsigned int nbRightDiffs, FileFinderMask fileFinder);
 	void printUnifiedEdit(char** leftFile, unsigned int leftSize, char** rightFile, unsigned int rightSize, unsigned int leftIndex,
 							unsigned int rightIndex, unsigned int nbLeftDiffs, unsigned int nbRightDiffs, unsigned int nbContextLines);
     void printLabel(char* mark, char* path);

@@ -25,59 +25,95 @@ Builds the LCS matrix
 **/
 unsigned int** LCS_buildMatrix(char **leftIn, char **rightIn, unsigned int leftSize, unsigned int rightSize, unsigned char isCaseSensitive)
 {
-	unsigned int defaultValue = 0;
-    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int), &defaultValue);
+    unsigned int **matrix = (unsigned int**) allocateMatrix(leftSize+1, rightSize+1, sizeof(unsigned int));
     StringComparator compare = getComparisonMethod(isCaseSensitive);
     register unsigned int i, j;
 
-    for (i = 1 ; i < leftSize ; i++)
+    for (i = 0 ; i < leftSize ; i++)
     {
-        for (j = 1 ; j < rightSize ; j++)
+        for (j = 0 ; j < rightSize ; j++)
         {
             if (!compare(leftIn[i], rightIn[j]))
             {
-                matrix[i][j] = matrix[i-1][j-1] + 1;
+                matrix[i+1][j+1] = matrix[i][j] + 1;
             }
             else
             {
-                matrix[i][j] = matrix[i][j-1]>matrix[i-1][j]?matrix[i][j-1]:matrix[i-1][j];
+                matrix[i+1][j+1] = matrix[i+1][j]>matrix[i][j+1]?matrix[i+1][j]:matrix[i][j+1];
             }
         }
     }
     return matrix;
 }
 
-char** LCS_extract(unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize, unsigned char isCaseSensitive)
+/**
+
+Extracts the LCS matrix as a string array
+
+@param lcsSize The lcs array size
+@param matrix The lcs matrix
+@param leftIn The older file of both
+@param rightIn The newer file of both
+@param leftSize The left file buffered array size
+@param rightSize The right file buffered array size
+@param isCaseSensitive Check string using case sensitive or insensitive process
+
+**/
+char** LCS_extract(unsigned int *lcsSize, unsigned int** matrix, char*** leftIn, char*** rightIn,
+                    int leftSize, int rightSize, unsigned char isCaseSensitive)
 {
     StringComparator compare = getComparisonMethod(isCaseSensitive);
-	int taille = leftSize > rightSize ? leftSize : rightSize;
-    char **lcs = (char**)malloc((leftSize>rightSize?leftSize:rightSize) * sizeof(char*));
+    char **lcs = (char**)scalloc((leftSize>rightSize?leftSize:rightSize) * sizeof(char*));
 
-    LCS_recursiveExtract(&lcs, matrix, leftIn, rightIn, leftSize, rightSize, compare, 0);
+    *lcsSize = LCS_recursiveExtract(&lcs, matrix, leftIn, rightIn, leftSize, rightSize, compare, 1);
 
     return lcs;
 }
 
-void LCS_recursiveExtract(char*** lcs, unsigned int** matrix, char** leftIn, char** rightIn, int leftSize, int rightSize,
-                          StringComparator compare, unsigned int index)
-{
-    if (leftSize == 0 || rightSize == 0)
-        return;
+/**
 
-    if (compare(leftIn[leftSize - 1], rightIn[rightSize - 1]) == 0)
+Extracts the LCS matrix as a string array - recursive hidden form
+
+@param lcs The extracted lcs array
+@param matrix The lcs matrix
+@param leftIn The older file of both
+@param rightIn The newer file of both
+@param leftSize The left file buffered array size
+@param rightSize The right file buffered array size
+@param compare The string comparison function
+@param isFirstCall The flag which specifies if this is the head of the recursive tree
+
+**/
+unsigned int LCS_recursiveExtract(char*** lcs, unsigned int** matrix, char*** leftIn, char*** rightIn, int leftSize, int rightSize,
+                          StringComparator compare, unsigned char isFirstCall)
+{
+    static unsigned int i = 0;
+
+    if(isFirstCall)
     {
-        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize - 1, rightSize - 1, compare, index);
-        (*lcs)[index] = leftIn[leftSize - 1];
+        i = 0;
     }
-    else if (matrix[leftSize][rightSize] != matrix[leftSize][rightSize - 1])
+
+    if (leftSize < 1 || rightSize < 1)
+        return i;
+
+    if (compare((*leftIn)[leftSize - 1], (*rightIn)[rightSize - 1]) == 0)
     {
-        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize, rightSize - 1, compare, index);
+        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize - 1, rightSize - 1, compare, 0);
+        (*lcs)[i] = (*leftIn)[leftSize - 1];
+        i++;
+    }
+
+    else if (matrix[leftSize][rightSize] == matrix[leftSize][rightSize - 1])
+    {
+        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize, rightSize - 1, compare, 0);
     }
 
     else
     {
-        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize - 1, rightSize, compare, index);
+        LCS_recursiveExtract(lcs, matrix, leftIn, rightIn, leftSize - 1, rightSize, compare, 0);
     }
+    return i;
 }
 
 /**
@@ -87,33 +123,46 @@ Allocates and initializes a matrix
 @param xSize The X axis size of the matrix
 @param ySize The Y axis size of the matrix
 @param elementSize The size of one single element
-@param defaultValue The defaultValue to apply to each element
 
 @return The allocated matrix
 
 **/
-void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int elementSize, void* defaultValue)
+void** allocateMatrix(unsigned int xSize, unsigned int ySize, unsigned int elementSize)
 {
     void **matrix = NULL;
-	unsigned int *mat = NULL;
-    register unsigned int i, j;
+    register unsigned int i;
 
-    matrix = smalloc(xSize * sizeof(void*));
+    matrix = scalloc(xSize * sizeof(void*));
 
     for (i = 0 ; i < xSize ; i++)
     {
         if(ySize > 0)
         {
-            matrix[i] = (void*)smalloc(ySize * elementSize);
+            matrix[i] = (void*)scalloc(ySize * elementSize);
         }
     }
 
-    for (j = 0 ; j < ySize  ; j++)
+    return matrix;
+}
+
+/**
+
+Cleans a matrix
+
+@param matrix The pointer to the matrix to free
+@param ySize The Y axis size of the matrix
+
+**/
+void freeMatrix(void ***matrix, unsigned int xSize)
+{
+    register unsigned int i;
+
+    for (i = 0 ; i < xSize ; i++)
     {
-		memcpy((void**)(&(matrix[i])) + j * elementSize, defaultValue, elementSize);
+        free((*matrix)[i]);
     }
 
-    return matrix;
+    free(*matrix);
 }
 
 /**

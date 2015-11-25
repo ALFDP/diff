@@ -1,5 +1,5 @@
 #include "splitFileContents.h"
-#pragma warning (disable : 4996)
+
 
 
 // This function is the main function to set up the structure from file

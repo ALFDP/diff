@@ -1,7 +1,7 @@
 #include "../logger/logger.h"
 #include "../lcs.h"
 
-int __main(int argc, char** argv)
+int X__main(int argc, char** argv)
 {
 
     char **testIn1 = malloc(5 * sizeof(char*));
@@ -9,6 +9,7 @@ int __main(int argc, char** argv)
     char **lcs = NULL;
     unsigned int sz1 = 5, sz2 = 4;
     unsigned int **matrix = NULL;
+    unsigned int lcsSize = 0;
     int i;
     for(i = 0 ; i < sz1 ; i++)
         testIn1[i] = malloc(100 * sizeof(char));
@@ -29,7 +30,7 @@ int __main(int argc, char** argv)
 
     matrix = LCS_buildMatrix(testIn1, testIn2, sz1, sz2, 0);
 
-    lcs = LCS_extract(matrix, testIn1, testIn2, sz1, sz2, 0);
+    lcs = LCS_extract(&lcsSize, matrix, &testIn1, &testIn2, sz1, sz2, 0);
 
     free(matrix);
 

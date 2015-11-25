@@ -1,4 +1,5 @@
 #pragma once
+#include "splitFileContents.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -20,4 +21,5 @@ enum OutputMode
 OutputMode getOptions(int argc, char** argv);
 int getLongOption(char** argv, int* i, OutputMode* option, int* checkTab, int longChar);
 void initTab(int* tab, int size);
-int printReport(FileContent* file1, FileContent* file2, int option);
+int printReport(FileContent* file1, FileContent* file2, int option, int caseSensitive);
+int isEqual(char** txt1, char** txt2, int lineF1, int lineF2, int caseSensitive);
