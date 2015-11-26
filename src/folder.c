@@ -116,13 +116,13 @@ void compareFileAndFolder(char** argv, int option, char* folderPath, char** file
 		{
 			if (strcmp(fileFolder[i], fileName) == 0)
 			{
-				char* path1 = malloc((strlen(fileFolder[i]) + 2 + strlen(folderPath)) * sizeof(char));
+				char* path = malloc((strlen(fileFolder[i]) + 2 + strlen(folderPath)) * sizeof(char));
 				
-				strcpy(path1, folderPath);
-				strcat(path1, separator);
-				strcat(path1, fileFolder[i]);
+				strcpy(path, folderPath);
+				strcat(path, separator);
+				strcat(path, fileFolder[i]);
 
-				Output(path1, fileName, option, argv);
+				Output(path, fileName, option, argv);
 			}
 		}
 	}
