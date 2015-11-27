@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FOLDER_H_INCLUDED
+
+    #define FOLDER_H_INCLUDED
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,3 +15,4 @@ void compareFileAndFolder(char** argv, int option, char* folderPath, char** file
 void getStrucutre(char* file1, char* file2, int argc, char** argv);
 void Output(char* filePath1, char* filePath2, int option, char** argv);
 
+#endif // FOLDER_H_INCLUDED

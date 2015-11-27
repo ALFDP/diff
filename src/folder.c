@@ -99,12 +99,13 @@ void compareFolderFile(char** argv, int option, char* folderPath1, char* folderP
 
 void compareFileAndFolder(char** argv, int option, char* folderPath, char** fileFolder, int fileFolderLen, char* fileName)
 {
+	int i;
 #ifdef WIN32
 	char separator[2] = "\\";
 #else
 	char separator = '/';
 #endif
-	int i, j;
+
 
 	if (fileFolderLen < 3)
 	{

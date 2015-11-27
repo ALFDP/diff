@@ -5,6 +5,7 @@
 #include "options.h"
 #include "splitFileContents.h"
 #include "lcs.h"
+#include "output.h"
 
 OutputMode getOptions(int argc, char** argv) {
 
@@ -71,7 +72,7 @@ int getLongOption(char** argv, int* val, OutputMode* option,int* checkTab, int l
 				{
 					*option = *option + SENSITIVE_CASE;
 					checkTab[1] = TRUE;
-					
+
 				}
 			}
 			else if (tab[j] == 'q')
@@ -80,16 +81,16 @@ int getLongOption(char** argv, int* val, OutputMode* option,int* checkTab, int l
 				{
 					*option = *option + BRIEF_REPORT;
 					checkTab[2] = TRUE;
-					
+
 				}
-				
+
 			}
 			else if (tab[j] == 's')
 			{
 				if (checkTab[2] == FALSE && checkTab[3] == FALSE)
 				{
 					*option = *option + IDENTICAL_REPORT;
-					checkTab[3] = TRUE;	
+					checkTab[3] = TRUE;
 				}
 			}
 			j++;
@@ -162,11 +163,11 @@ void initTab(int* tab, int size)
 
 int printReport(FileContent* file1, FileContent* file2, int option, OutputMode options, int caseSensitive)
 {
-	int i = 0, j = 0, lineF1 = file1->nbLine, lineF2 = file2->nbLine;
+	int i = 0;
 	char** txt1 = file1->elem;
 	char** txt2 = file2->elem;
-	
-	
+
+
 
 	if(file1->nbLine != file2->nbLine)
 	{
@@ -183,7 +184,7 @@ int printReport(FileContent* file1, FileContent* file2, int option, OutputMode o
 	else {
 		StringComparator compare = getComparisonMethod(caseSensitive);
 
-		for (i = 0; i < lineF1; i++)
+		for (i = 0; i < file1->nbLine; i++)
 		{
 			if (compare(txt1[i], txt2[i]) != 0)
 			{
@@ -208,15 +209,15 @@ int printReport(FileContent* file1, FileContent* file2, int option, OutputMode o
 void redirectOutput(OutputMode option, char* path1, char* path2, FileContent* file1, FileContent* file2)
 {
 	unsigned int** matrix = NULL;
-	char ** lcs = NULL;
-	unsigned int lcsSize = 0, i = 0;
+	char **lcs = NULL;
+	unsigned int lcsSize = 0;
 
 	if (option == NORMAL_OUTPUT_MODE + SENSITIVE_CASE)
 	{
 		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
-		lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
-		printStandardDiff(file1->elem, file2->elem, matrix, lcsSize, file1->nbLine, file2->nbLine, TRUE);
-		freeMatrix(&matrix, file1->nbLine + 1);
+		lcs = LCS_extract(&lcsSize, matrix, &(file1->elem), &(file2->elem), file1->nbLine, file2->nbLine, TRUE);
+		printStandardDiff(file1->elem, file2->elem, lcs, lcsSize, file1->nbLine, file2->nbLine, TRUE);
+		freeMatrix((void***)&matrix, file1->nbLine + 1);
 		free(lcs);
 
 	}
@@ -224,8 +225,8 @@ void redirectOutput(OutputMode option, char* path1, char* path2, FileContent* fi
 	{
 		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, TRUE);
 		lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, TRUE);
-		printUnifiedDiff(path1, path2, file1->elem, file1->nbLine, file2->elem, file2->nbLine, matrix, lcsSize, TRUE, 3);
-		freeMatrix(&matrix, file1->nbLine +1);
+		printUnifiedDiff(path1, path2, file1->elem, file1->nbLine, file2->elem, file2->nbLine, lcs, lcsSize, TRUE, 3);
+		freeMatrix((void***)&matrix, file1->nbLine +1);
 		free(lcs);
 	}
 
@@ -233,16 +234,16 @@ void redirectOutput(OutputMode option, char* path1, char* path2, FileContent* fi
 	{
 		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, FALSE);
 		lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, FALSE);
-		printStandardDiff(file1->elem, file2->elem, matrix, lcsSize, file1->nbLine, file2->nbLine, FALSE);
-		freeMatrix(&matrix, file1->nbLine + 1);
+		printStandardDiff(file1->elem, file2->elem, lcs, lcsSize, file1->nbLine, file2->nbLine, FALSE);
+		freeMatrix((void***)&matrix, file1->nbLine + 1);
 		free(lcs);
 	}
 	else if (option == UNIFIED_OUTPUT_MODE + NO_SENSITIVE_CASE)
 	{
 		matrix = LCS_buildMatrix(file1->elem, file2->elem, file1->nbLine, file2->nbLine, FALSE);
 		lcs = LCS_extract(&lcsSize, matrix, &file1->elem, &file2->elem, file1->nbLine, file2->nbLine, FALSE);
-		printUnifiedDiff(path1, path2, file1->elem, file1->nbLine, file2->elem, file2->nbLine, matrix, lcsSize, FALSE, 3);
-		freeMatrix(&matrix, file1->nbLine + 1);
+		printUnifiedDiff(path1, path2, file1->elem, file1->nbLine, file2->elem, file2->nbLine, lcs, lcsSize, FALSE, 3);
+		freeMatrix((void***)&matrix, file1->nbLine + 1);
 		free(lcs);
 	}
 

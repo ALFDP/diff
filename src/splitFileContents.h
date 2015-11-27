@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SPLIT_H_INCLUDED
+
+    #define SPLIT_H_INCLUDED
 
 #include <time.h>
 #include <sys\types.h>
@@ -8,13 +10,12 @@
 #include <string.h>
 #include <errno.h>
 
-// Define to simulate bool 
+// Define to simulate bool
 #define TRUE 1
 #define FALSE 0
 
 
 // Definition of the fileContent Structure
-typedef struct FileContent FileContent;
 struct FileContent
 {
 	char** elem;
@@ -24,9 +25,11 @@ struct FileContent
 	char* path;
 };
 
+typedef struct FileContent FileContent;
+
 // Function's prototype
 FileContent* pushFileToStruct(char *filePath);
-int getLineNumber(FILE* file);
+unsigned int getLineNumber(FILE* file);
 char* getLine(FILE* file);
 void freeStruct(FileContent* structToFree);
 void structDisplay(FileContent* structToDisplay, int displayLine);
@@ -34,3 +37,5 @@ int realloc_s(char **line, char* toCpy, int nbELem);
 void initBuffer(char *buffer, int size);
 struct _stat* getDataFile(char* path);
 char* getFTime(__time64_t timeToCpy);
+
+#endif // SPLIT_H_INCLUDED

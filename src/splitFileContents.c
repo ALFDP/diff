@@ -3,7 +3,7 @@
 
 
 // This function is the main function to set up the structure from file
-// The parameter is the path of the file 
+// The parameter is the path of the file
 // The function a pointer to the new structure
 FileContent* pushFileToStruct(char *filePath) {
 	// Checking if the file path is empty, if null the program will be close by exit function
@@ -13,8 +13,8 @@ FileContent* pushFileToStruct(char *filePath) {
 	FILE* file = NULL;
 
 	file = fopen(filePath, "r");
-	
-	// Checking if the file is open, if the opening has failed we close the program 
+
+	// Checking if the file is open, if the opening has failed we close the program
 	if (file == NULL)
 		exit(EXIT_FAILURE);
 
@@ -28,7 +28,7 @@ FileContent* pushFileToStruct(char *filePath) {
 
 	// Transform Latest Modification Time to string
 	elem->modifiedTime = getFTime(elem->fileInfo->st_mtime);
-	
+
 	// Getting line number from the file
 	nbLine = getLineNumber(file);
 
@@ -80,19 +80,18 @@ struct _stat* getDataFile(char* path)
 
 
 // This function get the number of line in the file in parameter
-int getLineNumber(FILE* file)
+unsigned int getLineNumber(FILE* file)
 {
-	int c = 0, count = 0;
+	unsigned int count = 0;
+	char c[512];
 
 	// Obtain number of line
-	
-	while ((c = fgetc(file)) != EOF)
+
+	while (fgets(c,512,file))
 	{
-		if (c == '\n')
 			count++;
 	}
 
-	count++;
 
 	// rewind put the cursor to the first char in the file
 	rewind(file);
@@ -100,25 +99,29 @@ int getLineNumber(FILE* file)
 	return count;
 }
 
-// This function get line in the file and return it as char* 
+// This function get line in the file and return it as char*
 char* getLine(FILE* file)
 {
 	char *line = NULL;
 	char buffer[BUFSIZ];
 	int i = 0, c = 0;
 
-	initBuffer(&buffer[0], BUFSIZ);	
-	c = fgetc(file);
+
+
 
 	// This while get char by char in the file and put them in buffer var
-	// If the buffer is full, we flush it in the line char* 
+	// If the buffer is full, we flush it in the line char*
 	// This method limite malloc use
-	while (1)
-	{
+
+		fgets(buffer, 512, file);
+		line = malloc((strlen(buffer) + 1) * sizeof(char));
+		strcpy(line, buffer);
+		line[strlen(line) - 1] = '\0';
+		/*
 		// If the cursor reach the end of the line or the fil, we break the while
 		if (c == '\n' || c== '\0' || c == EOF)
 			break;
-		
+
 		buffer[i] = c;
 		i++;
 		if (i == BUFSIZ)
@@ -127,10 +130,9 @@ char* getLine(FILE* file)
 			i = 0;
 		}
 
-		c = fgetc(file);
-	}
-	// Don't forget to flush the buffer in the line char if is not full in the while
-	realloc_s(&line, buffer, i);
+		c = fgetc(file);*/
+
+
 
 	return line;
 }
@@ -159,7 +161,7 @@ void freeStruct(FileContent* structToFree)
 }
 
 // This function display all the line in the struct
-// The second paramter is a bool to display or not the line number 
+// The second paramter is a bool to display or not the line number
 void structDisplay(FileContent* structToDisplay, int displayLine)
 {
 	if (structToDisplay == NULL)
@@ -182,7 +184,7 @@ void structDisplay(FileContent* structToDisplay, int displayLine)
 	}
 }
 
-// This is a custom realloc functon to set up our line 
+// This is a custom realloc functon to set up our line
 // First paramter is the string to change size, second the string to cpy in the first, and the third the number of elements to cpy
 int realloc_s(char** line, char* toCpy, int nbELem)
 {
@@ -217,7 +219,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 			free(temp);
 			return 1;
 		}
-		// We reput our first content in his place 
+		// We reput our first content in his place
 		for (i = 0; i < length; i++)
 		{
 			line[0][i] = temp[i];
@@ -226,7 +228,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 		// We free the temp string we won't use it anymore
 		free(temp);
 
-		// We concat the new content after the old one in our string 
+		// We concat the new content after the old one in our string
 		for (i = 0; i < nbELem; i++)
 		{
 			line[0][length + i] = toCpy[i];
@@ -245,7 +247,7 @@ int realloc_s(char** line, char* toCpy, int nbELem)
 		}
 		line[0][nbELem] = '\0';
 	}
-	
+
 	return 0;
 }
 
@@ -264,13 +266,13 @@ char* getFTime(__time64_t timeToCpy)
 
 	char* timeBuf = malloc(26 * sizeof(char));
 	initBuffer(timeBuf, 26);
-	
+
 	if (timeBuf == NULL)
 	{
 		printf("ERROR: Failed Memory Allocation\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	time(&timeToCpy);
 	timeBuf = ctime(&timeToCpy);
 

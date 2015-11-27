@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 			option = NORMAL_OUTPUT_MODE + SENSITIVE_CASE;
 
 			redirectOutput(option, argv[1], argv[2], file1, file2);
-			
+
 			freeStruct(file1);
 			freeStruct(file2);
 		}
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 			FileContent* file1;
 			FileContent* file2;
 			OutputMode option;
-			
+
 			option = getOptions(0, argv);
 
 			file1 = pushFileToStruct(argv[2]);
@@ -146,6 +146,6 @@ int main(int argc, char** argv)
 			}
 		}
 
-	} 
+	}
 	return 0;
 }

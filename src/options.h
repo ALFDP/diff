@@ -1,4 +1,6 @@
-#pragma once
+#ifndef OPTION_H_INCLUDED
+    #define OPTION_H_INCLUDED
+
 #include "splitFileContents.h"
 
 #define TRUE 1
@@ -23,3 +25,5 @@ int getLongOption(char** argv, int* i, OutputMode* option, int* checkTab, int lo
 void initTab(int* tab, int size);
 int printReport(FileContent* file1, FileContent* file2, int option, OutputMode options, int caseSensitive);
 void redirectOutput(OutputMode option, char* path1, char* path2, FileContent* file1, FileContent* file2);
+
+#endif // OPTION_H_INCLUDED
